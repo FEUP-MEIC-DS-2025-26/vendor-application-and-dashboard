@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException
-from app.dashboard_service import dashboard_service
+from app.services.dashboard_service import dashboard_service
 import logging
 
 logger = logging.getLogger(__name__)

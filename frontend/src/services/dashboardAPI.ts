@@ -137,6 +137,40 @@ class DashboardAPI {
       ]
     };
   }
+
+  /**
+   * Register a new vendor
+   */
+  async registerVendor(vendorData: any): Promise<{ success: boolean; data?: any; error?: string }> {
+    try {
+      console.log('📝 Submitting vendor registration...');
+      
+      const response = await fetch(`${API_BASE_URL}/vendors/register`, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(vendorData)
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.detail || 'Registration failed');
+      }
+
+      console.log('✅ Vendor registration successful:', data);
+      return { success: true, data };
+
+    } catch (error: any) {
+      console.error('❌ Vendor registration failed:', error);
+      return { 
+        success: false, 
+        error: error.message || 'Failed to register vendor'
+      };
+    }
+  }
 }
 
 export const dashboardAPI = new DashboardAPI();

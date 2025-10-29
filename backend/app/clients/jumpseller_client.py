@@ -1,7 +1,7 @@
 import httpx
 import base64
 from typing import Dict, Any, Optional, List
-from app.config import settings
+from app.core.config import settings
 import logging
 
 logger = logging.getLogger(__name__)

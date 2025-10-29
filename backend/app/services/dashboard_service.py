@@ -1,5 +1,5 @@
 from typing import Dict, Any, List
-from app.jumpseller_client import jumpseller_client
+from app.clients.jumpseller_client import jumpseller_client
 import asyncio
 import logging
 from datetime import datetime, timedelta
