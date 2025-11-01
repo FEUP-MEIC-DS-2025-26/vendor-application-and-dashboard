@@ -74,6 +74,7 @@ function Dashboard({ navigate }: DashboardProps) {
       <DashboardHeader 
         storeInfo={store_info} 
         stats={stats} 
+        onRegister={() => navigate("/register")}
       />
 
       <main className="dashboard-main">

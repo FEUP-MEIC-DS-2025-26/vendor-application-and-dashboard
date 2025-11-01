@@ -3,3 +3,5 @@ uvicorn[standard]>=0.22.0
 httpx>=0.24.0
 python-dotenv>=1.0.0
 pydantic-settings>=2.0.0
+pydantic[email]>=2.0.0
+sqlmodel>=0.0.14
