@@ -141,6 +141,41 @@ footer {
   gap: 48px;
 }
 
+.header-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 16px;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.header-register-btn {
+  background: linear-gradient(135deg, var(--warm-brown) 0%, var(--accent-light) 100%);
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(139, 90, 60, 0.22);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.header-register-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(139, 90, 60, 0.32);
+}
+
+.header-register-btn:active {
+  transform: translateY(0);
+}
+
 .welcome-section h1 {
   margin: 0 0 8px;
   font-size: 2.5rem;
@@ -1052,6 +1087,16 @@ footer {
     padding: 32px 24px;
     margin-bottom: 32px;
   }
+
+  .header-right {
+    align-items: flex-start;
+    width: 100%;
+    gap: 12px;
+  }
+
+  .header-register-btn {
+    width: auto;
+  }
   
   .welcome-section h1 {
     font-size: 2rem;
@@ -1199,6 +1244,17 @@ footer {
   .register-form textarea {
     padding: 12px;
     font-size: 14px;
+  }
+
+  /* On very small screens make header actions full width */
+  .header-right {
+    width: 100%;
+    align-items: stretch;
+  }
+
+  .header-register-btn {
+    width: 100%;
+    text-align: center;
   }
 }
 

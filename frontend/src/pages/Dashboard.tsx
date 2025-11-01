@@ -74,26 +74,8 @@ function Dashboard({ navigate }: DashboardProps) {
       <DashboardHeader 
         storeInfo={store_info} 
         stats={stats} 
+        onRegister={() => navigate("/register")}
       />
-
-      {/* Quick link to vendor registration */}
-      <div style={{ textAlign: "center", margin: "20px 0" }}>
-        <button 
-          onClick={() => navigate("/register")}
-          style={{
-            padding: "12px 24px",
-            fontSize: "1em",
-            backgroundColor: "#2196F3",
-            color: "white",
-            border: "none",
-            borderRadius: "4px",
-            cursor: "pointer",
-            fontWeight: "bold"
-          }}
-        >
-          📝 Register New Vendor
-        </button>
-      </div>
 
       <main className="dashboard-main">
         <QuickActions actions={quick_actions} />
