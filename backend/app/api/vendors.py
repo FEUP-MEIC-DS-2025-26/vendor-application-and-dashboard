@@ -146,8 +146,9 @@ async def update_vendor_status(
 ):
     """
     Update vendor request status (approve/reject).
-    For admin use (authentication can be added later).
-    Falls back to mock response if database unavailable.
+    
+    This endpoint is called by the Admin Verification team when they approve/reject a vendor.
+    When status is 'approved', automatically creates a category in Jumpseller.
     """
     if update_data.status not in ["approved", "rejected"]:
         raise HTTPException(
