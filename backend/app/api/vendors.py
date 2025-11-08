@@ -11,6 +11,7 @@ from app.models.vendor import (
     VendorRequestResponse
 )
 from app.db import get_session
+from app.clients.jumpseller_client import jumpseller_client
 
 logger = logging.getLogger(__name__)
 
@@ -170,6 +171,18 @@ async def update_vendor_status(
         session.refresh(vendor)
         
         logger.info(f"Vendor {vendor_id} status updated to {update_data.status} by {update_data.reviewer}")
+        
+        if update_data.status == "approved":
+            try:
+                category_data = {
+                    "name": vendor.name,
+                    "description": vendor.about or f"Products from {vendor.name}",
+                    "status": "visible"
+                }
+                jumpseller_category = await jumpseller_client.create_category(category_data)
+                logger.info(f"Created Jumpseller category for vendor {vendor.name}: Category ID {jumpseller_category.get('id')}")
+            except Exception as js_error:
+                logger.error(f"Failed to create Jumpseller category for vendor {vendor_id}: {str(js_error)}")
         
         return vendor
         
