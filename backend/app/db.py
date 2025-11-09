@@ -1,25 +1,22 @@
 from sqlmodel import SQLModel, create_engine, Session
 import logging
-import os
-from dotenv import load_dotenv
 
-load_dotenv()
+from app.core.config import settings
 
 logger = logging.getLogger(__name__)
 
-DATABASE_URL = os.getenv(
-    "DATABASE_URL",
-    "postgresql://postgres:postgres@localhost:5432/vendors_db"
-)
+# Use the centralized pydantic settings (which reads .env via Settings.Config)
+DATABASE_URL = settings.database_url
 
+# Create engine and log the resolved URL with password hidden for safety
 engine = create_engine(DATABASE_URL, echo=False)
+try:
+    # SQLAlchemy URL object supports rendering with hidden password
+    masked = engine.url.render_as_string(hide_password=True)
+except Exception:
+    masked = str(DATABASE_URL)
 
-
-def create_db_and_tables():
-    """Create all database tables."""
-    logger.info("Creating database tables...")
-    SQLModel.metadata.create_all(engine)
-    logger.info("Database initialized")
+logger.info(f"Using database URL: {masked}")
 
 
 def get_session():

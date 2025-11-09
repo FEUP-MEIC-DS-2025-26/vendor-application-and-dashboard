@@ -5,7 +5,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.api.routes import router as jumpseller_router
 from app.core.config import settings
 from app.api.vendors import router as vendors_router
-from app.db import create_db_and_tables
 import pathlib
 import logging
 
@@ -29,11 +28,6 @@ app.include_router(jumpseller_router)
 
 # Include Vendor registration routes
 app.include_router(vendors_router)
-
-# Initialize database on startup
-@app.on_event("startup")
-def on_startup():
-    create_db_and_tables()
 
 # Path to frontend build output (frontend/dist)
 ROOT = pathlib.Path(__file__).resolve().parents[2]
