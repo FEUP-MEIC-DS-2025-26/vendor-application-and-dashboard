@@ -126,9 +126,25 @@ class JumpsellerClient:
             params['limit'] = limit
         if page:
             params['page'] = page
-            
         response = await self._make_request("GET", "products", params=params)
-        return response.get("products", [])
+
+        # Jumpseller may return either a dict with a 'products' key or a plain list
+        # where each item is a dict containing a 'product' key. Normalize both forms
+        # into a list of product dicts.
+        if isinstance(response, dict):
+            return response.get("products", [])
+
+        if isinstance(response, list):
+            normalized = []
+            for item in response:
+                if isinstance(item, dict) and 'product' in item:
+                    normalized.append(item.get('product'))
+                else:
+                    normalized.append(item)
+            return normalized
+
+        # Fallback
+        return []
     
     async def get_product(self, product_id: int) -> Dict:
         """Get a specific product by ID."""
@@ -160,7 +176,21 @@ class JumpsellerClient:
             params['limit'] = limit
             
         response = await self._make_request("GET", "orders", params=params)
-        return response.get("orders", [])
+
+        # Normalize orders similar to products: support dict with 'orders' key or list
+        if isinstance(response, dict):
+            return response.get("orders", [])
+
+        if isinstance(response, list):
+            normalized = []
+            for item in response:
+                if isinstance(item, dict) and 'order' in item:
+                    normalized.append(item.get('order'))
+                else:
+                    normalized.append(item)
+            return normalized
+
+        return []
     
     async def get_order(self, order_id: int) -> Dict:
         """Get a specific order by ID."""
