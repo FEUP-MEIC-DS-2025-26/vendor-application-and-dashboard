@@ -56,11 +56,65 @@ class DashboardService:
             pending_orders = len([o for o in all_orders if o.get('status') == 'pending'])
             
             # Calculate revenue (this month)
-            current_month_revenue = 0
+            current_month_revenue = 0.0
+
+            # Use last 30 days window (common interpretation of "last month" for dashboards)
+            now = datetime.utcnow()
+            window_start = now - timedelta(days=30)
+
+            def parse_order_date(date_str: str):
+                if not date_str:
+                    return None
+                # Common Jumpseller format: '2025-11-04 16:01:35 UTC'
+                try:
+                    # Remove trailing timezone designator if present
+                    ds = date_str.replace(' UTC', '').strip()
+                    return datetime.strptime(ds, '%Y-%m-%d %H:%M:%S')
+                except Exception:
+                    try:
+                        return datetime.fromisoformat(date_str)
+                    except Exception:
+                        return None
+
+            def get_order_total(order: Dict[str, Any]) -> float:
+                # Try several common fields used by APIs
+                for key in ('total', 'total_price', 'grand_total', 'amount'):
+                    val = order.get(key)
+                    if val is not None:
+                        try:
+                            return float(val)
+                        except Exception:
+                            pass
+
+                # Try totals object
+                totals = order.get('totals') or {}
+                for key in ('total', 'grand_total', 'amount'):
+                    val = totals.get(key)
+                    if val is not None:
+                        try:
+                            return float(val)
+                        except Exception:
+                            pass
+
+                # Fallback: sum line items price * quantity
+                total = 0.0
+                for li in order.get('line_items', []) or []:
+                    try:
+                        price = float(li.get('price', 0) or 0)
+                        qty = int(li.get('quantity', 1) or 1)
+                        total += price * qty
+                    except Exception:
+                        continue
+                return total
+
+            valid_statuses = {'completed', 'shipped', 'delivered', 'paid'}
             for order in all_orders:
-                if order.get('status') in ['completed', 'shipped', 'delivered']:
-                    total = float(order.get('total', 0))
-                    current_month_revenue += total
+                status = (order.get('status') or '').strip().lower()
+                order_date = parse_order_date(order.get('created_at') or order.get('date') or '')
+                if status in valid_statuses and order_date is not None:
+                    # check if order was in the last 30 days window
+                    if window_start <= order_date <= now:
+                        current_month_revenue += get_order_total(order)
             
             return {
                 "new_orders": pending_orders,
