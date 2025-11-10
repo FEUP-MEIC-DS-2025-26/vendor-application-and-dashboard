@@ -59,6 +59,12 @@ function Dashboard({ navigate }: DashboardProps) {
     return <ErrorScreen error={error} onRetry={loadDashboardData} />;
   }
 
+  // If the backend is unreachable we return a special fallback with error === 'ERROR'.
+  // In that case show the full-page ErrorScreen instead of rendering cached data.
+  if (dashboardData && dashboardData.error === 'ERROR') {
+    return <ErrorScreen error={dashboardData.error} onRetry={loadDashboardData} />;
+  }
+
   const { store_info, stats, recent_orders, quick_actions } = dashboardData;
   console.log('Dashboard Data:', dashboardData);
 
