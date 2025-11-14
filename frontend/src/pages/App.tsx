@@ -1,26 +1,16 @@
-import React, { useState } from "react";
+import React from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Dashboard from "./Dashboard";
 import VendorRegister from "./VendorRegister";
 
 export default function App() {
-  const [currentPage, setCurrentPage] = useState<"dashboard" | "register">("dashboard");
-
-  const navigate = (to: string) => {
-    if (to === "/register") {
-      setCurrentPage("register");
-    } else if (to === "/dashboard" || to === "/") {
-      setCurrentPage("dashboard");
-    }
-  };
-
-  if (currentPage === "register") {
-    return (
-      <VendorRegister 
-        onSuccess={() => navigate("/dashboard")}
-        onCancel={() => navigate("/dashboard")}
-      />
-    );
-  }
-
-  return <Dashboard navigate={navigate} />;
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/dashboard" element={<Dashboard navigate={(to) => window.location.href = to} />} />
+        <Route path="/register" element={<VendorRegister onSuccess={() => window.location.href = "/dashboard"} onCancel={() => window.location.href = "/dashboard"} />} />
+        <Route path="/" element={<Navigate to="/dashboard" replace />} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
