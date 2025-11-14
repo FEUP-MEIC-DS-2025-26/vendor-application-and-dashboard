@@ -76,7 +76,7 @@ class DashboardAPI {
         { id: 2, customer: "John Doe", total: 45.5, status: "completed", date: "2025-10-25", items_count: 1 },
       ],
       quick_actions: [
-        { id: "add_product", title: "Add New Product", description: "Create and list a new product", icon: "➕", action: "create_product" },
+        { id: "add_product", title: "Suggest a product", description: "Suggest a new product for the marketplace", icon: "➕", action: "create_product" },
         { id: "view_orders", title: "Manage Orders", description: "View and update order status", icon: "📦", action: "view_orders" },
         { id: "inventory", title: "Check Inventory", description: "Monitor stock levels", icon: "📊", action: "view_inventory" },
         { id: "analytics", title: "Sales Analytics", description: "View performance metrics", icon: "📈", action: "view_analytics" },

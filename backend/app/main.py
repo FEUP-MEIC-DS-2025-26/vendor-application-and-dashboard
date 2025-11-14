@@ -15,9 +15,14 @@ logger = logging.getLogger(__name__)
 app = FastAPI(title=settings.app_name, debug=settings.debug)
 
 # Configure CORS for frontend integration
+from app.core.config import settings as app_settings
+cors_origins = ["http://localhost:5173", "http://localhost:3000"]
+frontend_url = getattr(app_settings, "frontend_url", None)
+if frontend_url:
+    cors_origins.append(frontend_url)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://localhost:3000"],  # Vite dev server and other common ports
+    allow_origins=cors_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
