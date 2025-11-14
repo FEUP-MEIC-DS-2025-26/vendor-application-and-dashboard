@@ -2,8 +2,9 @@ from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
-from app.api_routes import router as jumpseller_router
-from app.config import settings
+from app.api.routes import router as jumpseller_router
+from app.core.config import settings
+from app.api.vendors import router as vendors_router
 import pathlib
 import logging
 
@@ -14,9 +15,14 @@ logger = logging.getLogger(__name__)
 app = FastAPI(title=settings.app_name, debug=settings.debug)
 
 # Configure CORS for frontend integration
+from app.core.config import settings as app_settings
+cors_origins = ["http://localhost:5173", "http://localhost:3000"]
+frontend_url = getattr(app_settings, "frontend_url", None)
+if frontend_url:
+    cors_origins.append(frontend_url)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://localhost:3000"],  # Vite dev server and other common ports
+    allow_origins=cors_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -24,6 +30,9 @@ app.add_middleware(
 
 # Include Jumpseller API routes
 app.include_router(jumpseller_router)
+
+# Include Vendor registration routes
+app.include_router(vendors_router)
 
 # Path to frontend build output (frontend/dist)
 ROOT = pathlib.Path(__file__).resolve().parents[2]

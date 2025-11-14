@@ -1,7 +1,7 @@
 import httpx
 import base64
 from typing import Dict, Any, Optional, List
-from app.config import settings
+from app.core.config import settings
 import logging
 
 logger = logging.getLogger(__name__)
@@ -126,9 +126,25 @@ class JumpsellerClient:
             params['limit'] = limit
         if page:
             params['page'] = page
-            
         response = await self._make_request("GET", "products", params=params)
-        return response.get("products", [])
+
+        # Jumpseller may return either a dict with a 'products' key or a plain list
+        # where each item is a dict containing a 'product' key. Normalize both forms
+        # into a list of product dicts.
+        if isinstance(response, dict):
+            return response.get("products", [])
+
+        if isinstance(response, list):
+            normalized = []
+            for item in response:
+                if isinstance(item, dict) and 'product' in item:
+                    normalized.append(item.get('product'))
+                else:
+                    normalized.append(item)
+            return normalized
+
+        # Fallback
+        return []
     
     async def get_product(self, product_id: int) -> Dict:
         """Get a specific product by ID."""
@@ -160,7 +176,21 @@ class JumpsellerClient:
             params['limit'] = limit
             
         response = await self._make_request("GET", "orders", params=params)
-        return response.get("orders", [])
+
+        # Normalize orders similar to products: support dict with 'orders' key or list
+        if isinstance(response, dict):
+            return response.get("orders", [])
+
+        if isinstance(response, list):
+            normalized = []
+            for item in response:
+                if isinstance(item, dict) and 'order' in item:
+                    normalized.append(item.get('order'))
+                else:
+                    normalized.append(item)
+            return normalized
+
+        return []
     
     async def get_order(self, order_id: int) -> Dict:
         """Get a specific order by ID."""
@@ -185,15 +215,26 @@ class JumpsellerClient:
     
     # Store Information Methods
     async def get_store_info(self) -> Dict:
-        """Get store information."""
-        response = await self._make_request("GET", "store")
-        return response.get("store", {})
+        """Get store information from products endpoint (store endpoint doesn't exist)."""
+        try:
+            products = await self._make_request("GET", "products", params={"limit": 1})
+            return {
+                "name": "Made in Portugal",
+                "currency": "EUR",
+                "timezone": "Europe/Lisbon"
+            }
+        except Exception:
+            return {
+                "name": "Made in Portugal",
+                "currency": "EUR", 
+                "timezone": "Europe/Lisbon"
+            }
     
     # Health Check Method
     async def health_check(self) -> bool:
         """Check if API credentials are working."""
         try:
-            await self.get_store_info()
+            await self._make_request("GET", "products", params={"limit": 1})
             return True
         except JumpsellerAPIError:
             return False

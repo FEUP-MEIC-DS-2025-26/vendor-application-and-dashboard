@@ -1,5 +1,5 @@
 from typing import Dict, Any, List
-from app.jumpseller_client import jumpseller_client
+from app.clients.jumpseller_client import jumpseller_client
 import asyncio
 import logging
 from datetime import datetime, timedelta
@@ -53,17 +53,79 @@ class DashboardService:
             
             # Calculate stats
             total_orders = len(all_orders)
-            pending_orders = len([o for o in all_orders if o.get('status') == 'pending'])
-            
-            # Calculate revenue (this month)
-            current_month_revenue = 0
+
+            # Prepare date windows and helpers
+            now = datetime.utcnow()
+            window_30d_start = now - timedelta(days=30)
+            window_24h_start = now - timedelta(days=1)
+
+            def parse_order_date(date_str: str):
+                if not date_str:
+                    return None
+                # Common Jumpseller format: '2025-11-04 16:01:35 UTC'
+                try:
+                    ds = date_str.replace(' UTC', '').strip()
+                    return datetime.strptime(ds, '%Y-%m-%d %H:%M:%S')
+                except Exception:
+                    try:
+                        return datetime.fromisoformat(date_str)
+                    except Exception:
+                        return None
+
+            def get_order_total(order: Dict[str, Any]) -> float:
+                # Try several common fields used by APIs
+                for key in ('total', 'total_price', 'grand_total', 'amount'):
+                    val = order.get(key)
+                    if val is not None:
+                        try:
+                            return float(val)
+                        except Exception:
+                            pass
+
+                # Try totals object
+                totals = order.get('totals') or {}
+                for key in ('total', 'grand_total', 'amount'):
+                    val = totals.get(key)
+                    if val is not None:
+                        try:
+                            return float(val)
+                        except Exception:
+                            pass
+
+                # Fallback: sum line items price * quantity
+                total = 0.0
+                for li in order.get('line_items', []) or []:
+                    try:
+                        price = float(li.get('price', 0) or 0)
+                        qty = int(li.get('quantity', 1) or 1)
+                        total += price * qty
+                    except Exception:
+                        continue
+                return total
+
+            # Count new orders in the last 24 hours (status 'pending')
+            new_orders_count = 0
+            valid_status = {'completed', 'shipped', 'delivered', 'paid'}
+
+            # Calculate revenue for last 30 days
+            current_month_revenue = 0.0
+
             for order in all_orders:
-                if order.get('status') in ['completed', 'shipped', 'delivered']:
-                    total = float(order.get('total', 0))
-                    current_month_revenue += total
+                status = (order.get('status') or '').strip().lower()
+                order_date = parse_order_date(order.get('created_at') or order.get('date') or '')
+
+                # New orders: pending in last 24 hours
+                if status in valid_status and order_date is not None:
+                    if window_24h_start <= order_date <= now:
+                        new_orders_count += 1
+
+                # Revenue: completed/paid/etc in last 30 days
+                if status in valid_status and order_date is not None:
+                    if window_30d_start <= order_date <= now:
+                        current_month_revenue += get_order_total(order)
             
             return {
-                "new_orders": pending_orders,
+                "new_orders": new_orders_count,
                 "total_orders": total_orders,
                 "monthly_revenue": current_month_revenue,
                 "currency": "EUR"  # You can get this from store info
@@ -79,7 +141,12 @@ class DashboardService:
             products = await jumpseller_client.get_products(limit=50)
             
             active_products = len([p for p in products if p.get('status') == 'active'])
-            low_stock = len([p for p in products if int(p.get('stock', 0)) < 5])
+
+            # Delegate low-stock detection to Jumpseller.
+            # Jumpseller exposes stock notification flags like `stock_notification` when a product
+            # is below the store-configured threshold. Use that indicator rather than applying
+            # a local threshold here to avoid duplicating business rules.
+            low_stock = len([p for p in products if bool(p.get('stock_notification'))])
             
             return {
                 "total_products": len(products),

@@ -8,16 +8,18 @@ interface DashboardHeaderProps {
     timezone?: string;
   };
   stats: DashboardStats;
+  onRegister?: () => void;
 }
 
-function DashboardHeader({ storeInfo, stats }: DashboardHeaderProps) {
+function DashboardHeader({ storeInfo, stats, onRegister }: DashboardHeaderProps) {
   return (
     <header className="dashboard-header">
       <div className="welcome-section">
         <h1>Welcome back, {storeInfo.name || 'Artisan'}!</h1>
         <p className="subtitle">Here's what's happening with your shop today</p>
       </div>
-      <div className="quick-stats">
+      <div className="header-right">
+        <div className="quick-stats">
         <div className="stat-card">
           <div className="stat-number">{stats.orders.new_orders}</div>
           <div className="stat-label">New Orders</div>
@@ -34,6 +36,16 @@ function DashboardHeader({ storeInfo, stats }: DashboardHeaderProps) {
           <div className="stat-card warning">
             <div className="stat-number">{stats.products.low_stock_alerts}</div>
             <div className="stat-label">Low Stock</div>
+          </div>
+        )}
+        </div>
+
+        {/* Register CTA placed to the right of the header stats */}
+        {onRegister && (
+          <div className="header-actions">
+            <button className="header-register-btn" onClick={onRegister}>
+              📝 Register New Vendor
+            </button>
           </div>
         )}
       </div>
