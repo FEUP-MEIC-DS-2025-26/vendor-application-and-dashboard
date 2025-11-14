@@ -12,6 +12,7 @@ class Settings(BaseSettings):
     # Custom URLs from .env
     create_seller_url: str = ""
     add_product_page_url: str = ""
+    frontend_url: str = ""
 
     """Application settings with Jumpseller API configuration."""
 
