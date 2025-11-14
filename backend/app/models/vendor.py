@@ -1,7 +1,9 @@
 from typing import Optional, List
 from sqlmodel import SQLModel, Field, JSON, Column
-from datetime import datetime
+from datetime import datetime, timezone
 from pydantic import EmailStr
+from sqlalchemy import DateTime
+from sqlalchemy.dialects.postgresql import JSONB
 
 
 class VendorAnswer(SQLModel):
@@ -42,6 +44,32 @@ class VendorRequest(SQLModel, table=True):
     # Timestamps
     submitted_at: datetime = Field(default_factory=datetime.utcnow)
     reviewed_at: Optional[datetime] = Field(default=None)
+
+
+class Vendor(SQLModel, table=True):
+    """Vendor model mapped to the final `vendor` table in Postgres.
+
+    This table stores approved (or pending_approval) vendors. All fields
+    collected during registration are stored under the `info` JSONB column.
+    """
+
+    __tablename__ = "vendor"
+
+    id: Optional[int] = Field(default=None, primary_key=True)
+    name: str = Field(max_length=200)
+    email: str = Field(max_length=255, index=True)
+
+    created_at: datetime = Field(
+        default_factory=lambda: datetime.now(timezone.utc),
+        sa_column=Column(DateTime(timezone=True), name="createdat"),
+    )
+    updated_at: datetime = Field(
+        default_factory=lambda: datetime.now(timezone.utc),
+        sa_column=Column(DateTime(timezone=True), name="updatedat"),
+    )
+
+    # Store all registration answers and metadata in JSONB
+    info: Optional[dict] = Field(default_factory=dict, sa_column=Column(JSONB))
 
 
 class VendorRequestCreate(SQLModel):

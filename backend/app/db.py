@@ -1,25 +1,22 @@
 from sqlmodel import SQLModel, create_engine, Session
-import pathlib
 import logging
+
+from app.core.config import settings
 
 logger = logging.getLogger(__name__)
 
-# Database file location: backend/data/vendors.db
-ROOT = pathlib.Path(__file__).resolve().parents[1]
-DATA_DIR = ROOT / "data"
-DATA_DIR.mkdir(exist_ok=True)
+# Use the centralized pydantic settings (which reads .env via Settings.Config)
+DATABASE_URL = settings.database_url
 
-DATABASE_URL = f"sqlite:///{DATA_DIR}/vendors.db"
+# Create engine and log the resolved URL with password hidden for safety
+engine = create_engine(DATABASE_URL, echo=False)
+try:
+    # SQLAlchemy URL object supports rendering with hidden password
+    masked = engine.url.render_as_string(hide_password=True)
+except Exception:
+    masked = str(DATABASE_URL)
 
-# Create engine with check_same_thread=False for SQLite (needed for FastAPI async)
-engine = create_engine(DATABASE_URL, echo=False, connect_args={"check_same_thread": False})
-
-
-def create_db_and_tables():
-    """Create all database tables."""
-    logger.info("Creating database tables...")
-    SQLModel.metadata.create_all(engine)
-    logger.info(f"Database initialized at {DATA_DIR}/vendors.db")
+logger.info(f"Using database URL: {masked}")
 
 
 def get_session():

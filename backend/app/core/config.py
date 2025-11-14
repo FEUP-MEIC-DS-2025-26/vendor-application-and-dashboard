@@ -16,6 +16,9 @@ class Settings(BaseSettings):
     jumpseller_api_base_url: str = "https://api.jumpseller.com/v1"
     jumpseller_api_timeout: int = 30
     
+    # Database
+    database_url: str = "postgresql://postgres:postgres@localhost:5432/vendors_db"
+    
     # FastAPI settings
     app_name: str = "Vendor Application Backend"
     debug: bool = False
@@ -24,7 +27,6 @@ class Settings(BaseSettings):
         env_file = ".env"
         env_file_encoding = "utf-8"
         case_sensitive = False
-        # This ensures environment variables are read
         env_prefix = ""
 
 # Global settings instance
