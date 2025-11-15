@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import * as Sentry from "@sentry/react";
 import { dashboardAPI } from "../services/dashboardAPI";
 import { DashboardData } from "../types/dashboard";
 import LoadingScreen from "../components/LoadingScreen";
@@ -46,10 +47,22 @@ function Dashboard({ navigate }: DashboardProps) {
       
       setError(errorMessage);
       console.error("Dashboard load error:", err);
+      Sentry.captureException(err);
     } finally {
       setLoading(false);
     }
   };
+
+  // --- Sentry Test Functions (Commented out - only for testing) ---
+  // const testSentryError = () => {
+  //   throw new Error("Sentry Test Error from Frontend");
+  // };
+  //
+  // const testSentryMessage = () => {
+  //   Sentry.captureMessage("Sentry Test Message from Frontend", "info");
+  //   alert("Test message sent to Sentry!");
+  // };
+  // ----------------------------
 
   if (loading) {
     return <LoadingScreen />;
@@ -76,6 +89,41 @@ function Dashboard({ navigate }: DashboardProps) {
           <button onClick={loadDashboardData} className="refresh-btn">Refresh</button>
         </div>
       )}
+      
+      {/* --- Sentry Test Buttons (Commented out - only for testing) --- */}
+      {/* 
+      <div style={{ marginBottom: "20px", display: "flex", gap: "10px" }}>
+        <button 
+          onClick={testSentryError} 
+          style={{ 
+            padding: "10px 15px", 
+            backgroundColor: "#ff4444", 
+            color: "white", 
+            border: "none", 
+            cursor: "pointer",
+            borderRadius: "4px",
+            fontSize: "12px"
+          }}
+        >
+          Test Sentry Error
+        </button>
+        <button 
+          onClick={testSentryMessage} 
+          style={{ 
+            padding: "10px 15px", 
+            backgroundColor: "#4444ff", 
+            color: "white", 
+            border: "none", 
+            cursor: "pointer",
+            borderRadius: "4px",
+            fontSize: "12px"
+          }}
+        >
+          Test Sentry Message
+        </button>
+      </div>
+      */}
+      {/* --- End Sentry Test Buttons --- */}
       
       <DashboardHeader 
         storeInfo={store_info} 

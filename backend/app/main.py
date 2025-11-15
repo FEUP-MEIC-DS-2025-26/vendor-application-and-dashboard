@@ -7,10 +7,25 @@ from app.core.config import settings
 from app.api.vendors import router as vendors_router
 import pathlib
 import logging
+import sentry_sdk
+from sentry_sdk.integrations.fastapi import FastApiIntegration
+import os
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+# --- Sentry Initialization ---
+if settings.sentry_dsn:
+    sentry_sdk.init(
+        dsn=settings.sentry_dsn,
+        integrations=[FastApiIntegration()],
+        # Use ENVIRONMENT variable (e.g., "production", "development")
+        environment=os.getenv("ENVIRONMENT", "development"),
+        traces_sample_rate=1.0, # Monitor performance
+    )
+    logger.info("Sentry telemetry initialized for backend.")
+# -----------------------------
 
 app = FastAPI(title=settings.app_name, debug=settings.debug)
 
@@ -55,3 +70,18 @@ else:
 @app.get("/api/health")
 def health():
     return {"status": "ok", "message": "Vendor Application Backend is running"}
+
+
+# --- Sentry Test Endpoints (Commented out - only for testing) ---
+# @app.get("/api/test-sentry-error")
+# def test_sentry_error():
+#     """Trigger a test error to verify Sentry is working"""
+#     raise Exception("Sentry Test Error from Backend")
+#
+#
+# @app.get("/api/test-sentry-message")
+# def test_sentry_message():
+#     """Send a test message to Sentry"""
+#     sentry_sdk.capture_message("Sentry Test Message from Backend", level="info")
+#     return {"message": "Test message sent to Sentry"}
+# ----------------------------

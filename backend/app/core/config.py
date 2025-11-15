@@ -22,6 +22,14 @@ class Settings(BaseSettings):
     jumpseller_api_base_url: str = "https://api.jumpseller.com/v1"
     jumpseller_api_timeout: int = 30
 
+    # Sentry Telemetry
+    sentry_dsn: Optional[str] = None
+    
+    # --- CORREÇÃO ADICIONADA ---
+    # Database URL (usa um ficheiro sqlite local como fallback)
+    database_url: str = "sqlite:///./temp.db"
+    # ---------------------------
+
     # FastAPI settings
     app_name: str = "Vendor Application Backend"
     debug: bool = False
