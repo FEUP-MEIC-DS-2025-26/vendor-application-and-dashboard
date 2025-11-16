@@ -1,6 +1,7 @@
+
 name: Security Scan
 
-# Corre este "workflow" sempre que há um push ou pull request
+# This workflow runs on every push or pull request
 on:
   push:
     branches: [ "main", "development" ] # Run on main and development branches
@@ -8,60 +9,62 @@ on:
     branches: [ "main", "development" ]
 
 jobs:
-  #--- Job 1: Scan do Backend ---
+
+  #--- Job 1: Backend Scan ---
   scan-backend:
     name: Scan Backend (Python)
     runs-on: ubuntu-latest
     
     defaults:
       run:
-        working-directory: ./backend # Define a pasta de trabalho
+        working-directory: ./backend # Set working directory
 
     steps:
-    - name: 1. Checkout do código
+    - name: 1. Checkout code
       uses: actions/checkout@v4
 
-    - name: 2. Configurar Python 3.11
+    - name: 2. Set up Python 3.11
       uses: actions/setup-python@v5
       with:
         python-version: '3.11'
         cache: 'pip'
 
-    - name: 3. Instalar dependências (incluindo ferramentas de scan)
+    - name: 3. Install dependencies (including scan tools)
       run: |
         pip install -r requirements.txt
         pip install bandit safety
 
-    - name: 4. Correr Bandit (Scan de Código)
+    - name: 4. Run Bandit (Code Scan)
       run: bandit -r ./app
 
-    - name: 5. Correr Safety (Scan de Dependências)
-      # Usamos o novo comando 'scan' como sugerido pelo log
-      run: safety scan -r requirements.txt
+    - name: 5. Run Safety (Dependency Scan)
+      # Using the new 'scan' command as suggested by the log
+      run: safety scan -r requirements.txt --key ${{ secrets.SAFETY_API_KEY }}
 
-  #--- Job 2: Scan do Frontend ---
+
+  #--- Job 2: Frontend Scan ---
   scan-frontend:
     name: Scan Frontend (React)
     runs-on: ubuntu-latest
     
     defaults:
       run:
-        working-directory: ./frontend # Define a pasta de trabalho
+        working-directory: ./frontend # Set working directory
 
     steps:
-    - name: 1. Checkout do código
+    - name: 1. Checkout code
       uses: actions/checkout@v4
 
-    - name: 2. Configurar Node.js
+    - name: 2. Set up Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '20' # A versão LTS
+        node-version: '20' # LTS version
         cache: 'npm'
         cache-dependency-path: frontend/package-lock.json
 
-    - name: 3. Instalar dependências
+    - name: 3. Install dependencies
       run: npm install
 
-    - name: 4. Correr NPM Audit (Scan de Dependências)
-      # --audit-level=moderate falha o build se encontrar vulnerabilidades
+    - name: 4. Run NPM Audit (Dependency Scan)
+      # --audit-level=moderate fails the build if vulnerabilities are found
       run: npm audit --audit-level=moderate
