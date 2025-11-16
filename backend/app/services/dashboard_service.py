@@ -79,8 +79,8 @@ class DashboardService:
                     if val is not None:
                         try:
                             return float(val)
-                        except Exception:
-                            pass
+                        except Exception as e:
+                            logger.warning(f"Failed to convert order['{key}'] to float: {e}")
 
                 # Try totals object
                 totals = order.get('totals') or {}
@@ -89,8 +89,8 @@ class DashboardService:
                     if val is not None:
                         try:
                             return float(val)
-                        except Exception:
-                            pass
+                        except Exception as e:
+                            logger.warning(f"Failed to convert totals['{key}'] to float: {e}")
 
                 # Fallback: sum line items price * quantity
                 total = 0.0
@@ -99,7 +99,8 @@ class DashboardService:
                         price = float(li.get('price', 0) or 0)
                         qty = int(li.get('quantity', 1) or 1)
                         total += price * qty
-                    except Exception:
+                    except Exception as e:
+                        logger.warning(f"Failed to process line item for total calculation: {e}")
                         continue
                 return total
 
