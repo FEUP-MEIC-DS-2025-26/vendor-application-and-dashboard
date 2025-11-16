@@ -36,15 +36,15 @@ jobs:
     - name: 4. Run Bandit (Code Scan)
       run: bandit -r ./app
 
-    - name: 5. Run Safety (Dependency Scan)
-      # Using the new 'scan' command as suggested by the log
-      run: safety scan -r requirements.txt --key ${{ secrets.SAFETY_API_KEY }}
-
     - name: Debug Safety API key
       env:
         SAFETY_API_KEY: ${{ secrets.SAFETY_API_KEY }}
       run: |
         echo "Key length: ${#SAFETY_API_KEY}"
+
+    - name: 5. Run Safety (Dependency Scan)
+      # Using the new 'scan' command as suggested by the log
+      run: safety scan -r requirements.txt --key ${{ secrets.SAFETY_API_KEY }}
 
   #--- Job 2: Frontend Scan ---
   scan-frontend:
