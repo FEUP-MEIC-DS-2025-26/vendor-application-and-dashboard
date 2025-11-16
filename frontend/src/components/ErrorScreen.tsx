@@ -25,8 +25,8 @@ function ErrorScreen({ error, onRetry }: ErrorScreenProps) {
           <ol style={{ margin: '8px 0', paddingLeft: '20px' }}>
             <li>Open a terminal in the <code>backend</code> folder</li>
             <li>Run: <code>uvicorn app.main:app --reload</code></li>
-            <li>Wait for "Uvicorn running on http://127.0.0.1:8000"</li>
-            <li>Click "Try Again" below</li>
+            <li>Wait for &#34;Uvicorn running on http://127.0.0.1:8000&#34;</li>
+            <li>Click &#34;Try Again&#34; below</li>
           </ol>
         </div>
         <button onClick={onRetry} className="retry-btn">Try Again</button>

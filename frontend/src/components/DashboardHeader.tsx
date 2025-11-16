@@ -16,7 +16,7 @@ function DashboardHeader({ storeInfo, stats, onRegister }: DashboardHeaderProps)
     <header className="dashboard-header">
       <div className="welcome-section">
         <h1>Welcome back, {storeInfo.name || 'Artisan'}!</h1>
-        <p className="subtitle">Here's what's happening with your shop today</p>
+        <p className="subtitle">Here&#39;s what&#39;s happening with your shop today</p>
       </div>
       <div className="header-right">
         <div className="quick-stats">

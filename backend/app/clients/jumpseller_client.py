@@ -104,8 +104,9 @@ class JumpsellerClient:
                     error_data = None
                     try:
                         error_data = response.json()
-                    except:
-                        pass
+                    except (ValueError, httpx.DecodingError) as e:
+                        # Failed to parse JSON from response; keep error_data as None and log for debugging
+                        logger.debug("Failed to parse JSON from error response: %s", e)
                     
                     raise JumpsellerAPIError(
                         f"API request failed with status {response.status_code}",
@@ -217,7 +218,6 @@ class JumpsellerClient:
     async def get_store_info(self) -> Dict:
         """Get store information from products endpoint (store endpoint doesn't exist)."""
         try:
-            products = await self._make_request("GET", "products", params={"limit": 1})
             return {
                 "name": "Made in Portugal",
                 "currency": "EUR",

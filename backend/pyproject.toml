@@ -1,0 +1,10 @@
+[tool.ruff]
+line-length = 88
+target-version = "py38"
+
+# Lint-specific settings should live under the `lint` table.
+[tool.ruff.lint]
+exclude = ["venv", ".venv", "__pycache__", "build", "dist", "node_modules"]
+# Ruff doesn't support all flake8 selectors; keep a minimal config.
+# If you want to ignore specific codes, add them here as strings.
+extend-ignore = ["E203"]

@@ -2,7 +2,6 @@
 from fastapi import APIRouter, HTTPException, status
 import logging
 import httpx
-import os
 from app.models.vendor import VendorRequestCreate
 
 logger = logging.getLogger(__name__)

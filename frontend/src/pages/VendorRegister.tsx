@@ -11,7 +11,6 @@ interface Question {
   answer: string;
 }
 
-const labelStyle = { display: "block", marginBottom: "5px", fontWeight: "bold", color: "#1a1a1a", fontSize: "1em" };
 
 const VERIFICATION_QUESTIONS = [
   {
@@ -137,9 +136,16 @@ function VendorRegister({ onSuccess, onCancel }: VendorRegisterProps) {
         setTimeout(() => onSuccess(), 2000);
       }
 
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Registration error:", err);
-      setError(err.message || "Error submitting registration. Please try again.");
+      // Narrow the error before accessing properties
+      let message = "Error submitting registration. Please try again.";
+      if (err instanceof Error) {
+        message = err.message || message;
+      } else if (typeof err === 'string') {
+        message = err;
+      }
+      setError(message);
     } finally {
       setLoading(false);
     }
