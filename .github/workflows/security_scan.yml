@@ -43,8 +43,9 @@ jobs:
         echo "Key length: ${#SAFETY_API_KEY}"
 
     - name: 5. Run Safety (Dependency Scan)
-      # Using the new 'scan' command as suggested by the log
-      run: safety scan -r requirements.txt --key ${{ secrets.SAFETY_API_KEY }}
+      env:
+        SAFETY_API_KEY: ${{ secrets.SAFETY_API_KEY }}
+      run: safety scan -r requirements.txt --key ${#SAFETY_API_KEY}
 
   #--- Job 2: Frontend Scan ---
   scan-frontend:
