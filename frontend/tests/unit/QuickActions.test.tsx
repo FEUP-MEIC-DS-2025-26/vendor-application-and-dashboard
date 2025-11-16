@@ -1,7 +1,7 @@
 import { render, screen, fireEvent } from "@testing-library/react";
-import QuickActions from "./QuickActions";
-import { QuickAction } from "../types/dashboard";
-import { ADD_PRODUCT_PAGE_URL } from "../config";
+import QuickActions from "../../src/components/QuickActions";
+import { QuickAction } from "../../src/types/dashboard";
+import { ADD_PRODUCT_PAGE_URL } from "../../src/config";
 import { describe, test, expect, vi, beforeEach } from "vitest";
 
 const mockActions: QuickAction[] = [

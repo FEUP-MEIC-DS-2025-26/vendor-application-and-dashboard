@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from "@testing-library/react";
-import ErrorScreen from "./ErrorScreen";
+import ErrorScreen from "../../src/components/ErrorScreen";
 import { describe, test, expect, vi } from "vitest";
 
 describe("ErrorScreen Component", () => {

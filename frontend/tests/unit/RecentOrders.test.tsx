@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
-import RecentOrders from "./RecentOrders";
-import { RecentOrder } from "../types/dashboard";
+import RecentOrders from "../../src/components/RecentOrders";
+import { RecentOrder } from "../../src/types/dashboard";
 import { describe, test, expect } from "vitest";
 
 const mockOrders: RecentOrder[] = [

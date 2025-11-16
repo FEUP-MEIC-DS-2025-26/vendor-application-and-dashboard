@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from "@testing-library/react";
-import DashboardHeader from "./DashboardHeader";
-import { DashboardStats } from "../types/dashboard";
+import DashboardHeader from "../../src/components/DashboardHeader";
+import { DashboardStats } from "../../src/types/dashboard";
 import { vi } from "vitest";
 
 const mockStats: DashboardStats = {

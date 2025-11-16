@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from "@testing-library/react";
-import ManagementGrid from "./ManagementGrid";
-import { DashboardStats } from "../types/dashboard";
+import ManagementGrid from "../../src/components/ManagementGrid";
+import { DashboardStats } from "../../src/types/dashboard";
 import { describe, test, expect, vi, beforeEach } from "vitest";
 
 const mockStats: DashboardStats = {
