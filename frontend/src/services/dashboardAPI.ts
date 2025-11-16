@@ -12,12 +12,19 @@ class DashboardAPI {
 
       console.log("✅ Dashboard data received:", data);
       return data;
-    } catch (error: any) {
-      console.error("❌ Failed to fetch dashboard data:", error.message);
+    } catch (error: unknown) {
+      // Narrow the unknown error before accessing properties
+      let msg = "Unable to fetch dashboard data";
+      if (error instanceof Error) {
+        msg = error.message || msg;
+        console.error("❌ Failed to fetch dashboard data:", error.message);
+      } else {
+        console.error("❌ Failed to fetch dashboard data:", error);
+      }
 
       // Return a fallback object to prevent crashes
       const fallbackData = this.getFallbackDashboard();
-      fallbackData.error = error.message || "Unable to fetch dashboard data";
+      fallbackData.error = msg;
       return fallbackData;
     }
   }
@@ -42,18 +49,32 @@ class DashboardAPI {
   /**
    * Register a new vendor
    */
-  async registerVendor(vendorData: any): Promise<{ success: boolean; data?: any; error?: string }> {
+  async registerVendor(
+    vendorData: Record<string, unknown>
+  ): Promise<{ success: boolean; data?: unknown; error?: string }> {
     try {
       console.log("📝 Submitting vendor registration...");
       const { data } = await api.post("/vendors/register", vendorData);
 
       console.log("✅ Vendor registration successful:", data);
       return { success: true, data };
-    } catch (error: any) {
-      console.error("❌ Vendor registration failed:", error.message);
+    } catch (error: unknown) {
+      // Narrow error and safely extract message/detail if available
+      console.error("❌ Vendor registration failed:", error);
+
+      let message = "Failed to register vendor";
+      // Try to extract axios-like response detail if present
+      if (typeof error === "object" && error !== null) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const errObj = error as any;
+        message = errObj?.response?.data?.detail || errObj?.message || message;
+      } else if (typeof error === "string") {
+        message = error;
+      }
+
       return {
         success: false,
-        error: error.response?.data?.detail || error.message || "Failed to register vendor",
+        error: message,
       };
     }
   }

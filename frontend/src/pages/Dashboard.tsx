@@ -40,11 +40,20 @@ function Dashboard({ navigate }: DashboardProps) {
       if (!data.success && data.error) {
         setError(data.error);
       }
-    } catch (err: any) {
-      const errorMessage = err.message.includes('timeout') 
-        ? "Backend server is not running. Please start it with: uvicorn app.main:app --reload"
-        : "Failed to load dashboard data";
-      
+    } catch (err: unknown) {
+      // Narrow the unknown error before accessing properties
+      let errorMessage = "Failed to load dashboard data";
+
+      if (err instanceof Error) {
+        if (err.message.includes('timeout')) {
+          errorMessage =
+            "Backend server is not running. Please start it with: uvicorn app.main:app --reload";
+        }
+      } else if (typeof err === 'string' && err.includes('timeout')) {
+        errorMessage =
+          "Backend server is not running. Please start it with: uvicorn app.main:app --reload";
+      }
+
       setError(errorMessage);
       console.error("Dashboard load error:", err);
       Sentry.captureException(err);

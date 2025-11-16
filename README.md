@@ -119,3 +119,49 @@ uvicorn app.main:app --host 0.0.0.0 --port 8000
 - `GET /api/dashboard` - Retrieve complete dashboard data
 - `GET /health` - Backend health check
 - `GET /api/jumpseller/health` - Jumpseller API connectivity check
+
+## 🔎 Linting
+
+This project includes linters for both frontend (ESLint) and backend (Ruff).
+
+Frontend (ESLint)
+
+From the repo root:
+
+```bash
+cd frontend
+# install dependencies (if not installed)
+npm ci
+
+# print eslint version
+npx eslint --version
+
+# run the lint script (configured to fail on errors)
+npm run lint
+
+# try automatic fixes for safe issues
+npx eslint 'src/**/*.{ts,tsx,js,jsx}' --fix
+```
+
+Backend (Ruff)
+
+Use a Python virtual environment and run:
+
+```bash
+cd backend
+python -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install ruff
+
+# show ruff version
+ruff --version
+
+# run ruff across the backend package
+ruff check backend
+
+# auto-fix many issues
+ruff check backend --fix
+```
+
+If you see configuration errors (for example an unknown rule), check `backend/pyproject.toml` or `frontend/.eslintrc.cjs` for typos.
