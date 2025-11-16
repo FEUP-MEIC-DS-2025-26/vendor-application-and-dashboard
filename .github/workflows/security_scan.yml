@@ -1,0 +1,67 @@
+name: Security Scan
+
+# Corre este "workflow" sempre que há um push ou pull request
+on:
+  push:
+    branches: [ "main" ] # Mude "main" se a sua branch principal tiver outro nome
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  #--- Job 1: Scan do Backend ---
+  scan-backend:
+    name: Scan Backend (Python)
+    runs-on: ubuntu-latest
+    
+    defaults:
+      run:
+        working-directory: ./backend # Define a pasta de trabalho
+
+    steps:
+    - name: 1. Checkout do código
+      uses: actions/checkout@v4
+
+    - name: 2. Configurar Python 3.11
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+        cache: 'pip'
+
+    - name: 3. Instalar dependências (incluindo ferramentas de scan)
+      run: |
+        pip install -r requirements.txt
+        pip install bandit safety
+
+    - name: 4. Correr Bandit (Scan de Código)
+      run: bandit -r ./app
+
+    - name: 5. Correr Safety (Scan de Dependências)
+      # Usamos o novo comando 'scan' como sugerido pelo log
+      run: safety scan -r requirements.txt
+
+  #--- Job 2: Scan do Frontend ---
+  scan-frontend:
+    name: Scan Frontend (React)
+    runs-on: ubuntu-latest
+    
+    defaults:
+      run:
+        working-directory: ./frontend # Define a pasta de trabalho
+
+    steps:
+    - name: 1. Checkout do código
+      uses: actions/checkout@v4
+
+    - name: 2. Configurar Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20' # A versão LTS
+        cache: 'npm'
+        cache-dependency-path: frontend/package-lock.json
+
+    - name: 3. Instalar dependências
+      run: npm install
+
+    - name: 4. Correr NPM Audit (Scan de Dependências)
+      # --audit-level=moderate falha o build se encontrar vulnerabilidades
+      run: npm audit --audit-level=moderate
