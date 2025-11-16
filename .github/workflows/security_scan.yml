@@ -3,9 +3,9 @@ name: Security Scan
 # Corre este "workflow" sempre que há um push ou pull request
 on:
   push:
-    branches: [ "main" ] # Mude "main" se a sua branch principal tiver outro nome
+    branches: [ "main", "development" ] # Run on main and development branches
   pull_request:
-    branches: [ "main" ]
+    branches: [ "main", "development" ]
 
 jobs:
   #--- Job 1: Scan do Backend ---
