@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.api.routes import router as jumpseller_router
 from app.core.config import settings
 from app.api.vendors import router as vendors_router
+from app.core.config import settings as app_settings
 import pathlib
 import logging
 import sentry_sdk
@@ -30,7 +31,6 @@ if settings.sentry_dsn:
 app = FastAPI(title=settings.app_name, debug=settings.debug)
 
 # Configure CORS for frontend integration
-from app.core.config import settings as app_settings
 cors_origins = ["http://localhost:5173", "http://localhost:3000"]
 frontend_url = getattr(app_settings, "frontend_url", None)
 if frontend_url:
