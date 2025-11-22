@@ -9,10 +9,13 @@ router = APIRouter(prefix="/api", tags=["Vendor API"])
 
 # Dashboard endpoint - single call to get all dashboard data
 @router.get("/dashboard")
-async def get_dashboard_data():
-    """Get all dashboard data in a single optimized call."""
+async def get_dashboard_data(period: str = "daily"):
+    """
+    Get all dashboard data in a single optimized call.
+    Accepts 'period' query param: 'daily', 'weekly', 'monthly'.
+    """
     try:
-        dashboard_data = await dashboard_service.get_dashboard_data()
+        dashboard_data = await dashboard_service.get_dashboard_data(period)
         return dashboard_data
     except Exception as e:
         logger.error(f"Dashboard endpoint failed: {str(e)}")
