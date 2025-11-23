@@ -8,11 +8,16 @@ env_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), '.env')
 load_dotenv(env_path)
 
 class Settings(BaseSettings):
+    # Google Application Credentials for GCP
+    google_application_credentials: str = ""
 
     # Custom URLs from .env
-    create_seller_url: str = ""
     add_product_page_url: str = ""
     frontend_url: str = ""
+
+    # Google Cloud Pub/Sub settings
+    gcp_project_id: str = ""
+    gcp_pubsub_topic: str = ""
 
     """Application settings with Jumpseller API configuration."""
 

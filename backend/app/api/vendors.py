@@ -22,7 +22,7 @@ async def register_vendor(vendor_data: VendorRequestCreate):
         )
 
 
-    # Build payload as per new required structure
+    # Build simplified payload
     payload = {
         "about": vendor_data.about,
         "phone": vendor_data.phone,
@@ -31,29 +31,19 @@ async def register_vendor(vendor_data: VendorRequestCreate):
         "website": vendor_data.website,
         "documents": vendor_data.documents,
         "questions": vendor_data.questions,
-        "owner_name": vendor_data.owner_name,
-        "raw_payload": vendor_data.dict()
+        "owner_name": vendor_data.owner_name
     }
 
 
-    from app.core.config import settings
-    create_seller_url = settings.create_seller_url
-    if not create_seller_url:
-        raise HTTPException(status_code=500, detail="CREATE_SELLER_URL not configured")
-
+    # Publish to Google Cloud Pub/Sub instead of direct API call
+    from app.clients.pubsub_client import publish_vendor_registration
     try:
-        async with httpx.AsyncClient() as client:
-            response = await client.post(create_seller_url, json=payload)
-            response.raise_for_status()
-            result = response.json()
-    except httpx.HTTPStatusError as e:
-        logger.error(f"Failed to register vendor: {e.response.text}")
-        raise HTTPException(status_code=e.response.status_code, detail=f"Failed to register vendor: {e.response.text}")
+        publish_vendor_registration(payload)
     except Exception as e:
-        logger.error(f"Vendor registration failed: {str(e)}")
-        raise HTTPException(status_code=500, detail=f"Registration failed: {str(e)}")
+        logger.error(f"Failed to publish vendor registration: {e}")
+        raise HTTPException(status_code=500, detail="Failed to process registration request.")
+    # Removed all code related to CREATE_SELLER_URL API call. Now only publishes to Pub/Sub.
 
     return {
         "message": "Registration submitted successfully",
-        "result": result
     }
