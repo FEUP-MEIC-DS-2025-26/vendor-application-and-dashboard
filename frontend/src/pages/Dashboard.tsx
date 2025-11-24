@@ -115,6 +115,49 @@ function Dashboard({ navigate }: DashboardProps) {
     }
   }
 
+  // Management section hotkeys: c -> catalog, s -> settings, a -> analytics, o -> orders
+  const managementKeyMap: Record<string, string> = {
+    c: "catalog",
+    s: "settings",
+    a: "analytics",
+    o: "orders",
+  };
+
+  const managementHotkeys: Record<string, string> = {};
+
+  // management action handler (used by the grid and hotkeys)
+  const handleManagementAction = useCallback(
+    (actionId: string) => {
+      switch (actionId) {
+        case "catalog":
+          // route to inventory/catalog view
+          navigate("/inventory");
+          break;
+        case "orders":
+          navigate("/orders");
+          break;
+        case "analytics":
+          navigate("/analytics");
+          break;
+        case "settings":
+          navigate("/settings");
+          break;
+        default:
+          console.log("Management action:", actionId);
+      }
+    },
+    [navigate]
+  );
+
+  // Register management keys into hotkey handlers and build hotkey map for the grid
+  for (const [key, actionId] of Object.entries(managementKeyMap)) {
+    // add management handler to global handlers only if not already set
+    if (!quickActionHandlers[key]) {
+      quickActionHandlers[key] = () => handleManagementAction(actionId);
+    }
+    managementHotkeys[actionId] = key;
+  }
+
   // Register global hotkeys: r = refresh, n = go to vendor register, h/? = toggle hotkey helpers
   useGlobalHotkeys({
     onRefresh: loadDashboardData,
@@ -215,7 +258,12 @@ function Dashboard({ navigate }: DashboardProps) {
           />
         )}
         
-        <ManagementGrid stats={stats} />
+        <ManagementGrid 
+          stats={stats} 
+          onAction={handleManagementAction} 
+          hotkeys={managementHotkeys} 
+          showHotkeys={showHotkeys}
+        />
       </main>
 
       <footer>
