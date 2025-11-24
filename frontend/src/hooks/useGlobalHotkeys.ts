@@ -72,5 +72,5 @@ export default function useGlobalHotkeys(options: GlobalHotkeysOptions) {
     return () => {
       window.removeEventListener("keydown", handler);
     };
-  }, [onRefresh, onRegister, onHelp, disabled]);
+  }, [onRefresh, onRegister, onHelp, quickActionHandlers, disabled]);
 }

@@ -58,37 +58,47 @@ class DashboardService:
             window_24h_start = now - timedelta(days=1)
 
             def parse_order_date(date_str: str):
-                if not date_str: return None
+                if not date_str: 
+                    return None
                 try:
                     ds = date_str.replace(' UTC', '').strip()
                     return datetime.strptime(ds, '%Y-%m-%d %H:%M:%S')
                 except Exception:
-                    try: return datetime.fromisoformat(date_str)
-                    except Exception: return None
+                    try: 
+                        return datetime.fromisoformat(date_str)
+                    except Exception: 
+                        return None
 
             def get_order_total(order: Dict[str, Any]) -> float:
                 for key in ('total', 'total_price', 'grand_total', 'amount'):
                     val = order.get(key)
                     if val is not None:
-                        try: return float(val)
-                        except: pass
+                        try:
+                            return float(val)
+                        except (TypeError, ValueError):
+                            # non-numeric or unexpected type
+                            pass
                 totals = order.get('totals') or {}
                 for key in ('total', 'grand_total', 'amount'):
                     val = totals.get(key)
                     if val is not None:
-                        try: return float(val)
-                        except: pass
+                        try:
+                            return float(val)
+                        except (TypeError, ValueError):
+                            # totals field may be malformed or non-numeric
+                            pass
                 total = 0.0
                 for li in order.get('line_items', []) or []:
                     try:
                         price = float(li.get('price', 0) or 0)
                         qty = int(li.get('quantity', 1) or 1)
                         total += price * qty
-                    except: continue
+                    except (TypeError, ValueError):
+                        # skip malformed line item
+                        continue
                 return total
 
             new_orders_count = 0
-            valid_status = {'completed', 'shipped', 'delivered', 'paid', 'pending'}
             revenue_status = {'completed', 'shipped', 'delivered', 'paid'}
             current_month_revenue = 0.0
 
@@ -192,12 +202,15 @@ class DashboardService:
                 
                 if status in valid_status:
                     date_str = order.get('created_at') or order.get('date')
-                    if not date_str: continue
+                    if not date_str: 
+                        continue
                         
                     try:
                         dt = date_str.replace(' UTC', '').strip()
                         order_date = datetime.strptime(dt, '%Y-%m-%d %H:%M:%S')
-                    except: continue
+                    except (ValueError, TypeError):
+                        # unable to parse this date string
+                        continue
 
                     # Filter out old orders
                     if order_date < start_date:
