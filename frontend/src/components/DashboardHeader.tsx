@@ -9,9 +9,11 @@ interface DashboardHeaderProps {
   };
   stats: DashboardStats;
   onRegister?: () => void;
+  showHotkeys?: boolean;
+  registerHotkey?: string;
 }
 
-function DashboardHeader({ storeInfo, stats, onRegister }: DashboardHeaderProps) {
+function DashboardHeader({ storeInfo, stats, onRegister, showHotkeys = false, registerHotkey }: DashboardHeaderProps) {
   return (
     <header className="dashboard-header">
       <div className="welcome-section">
@@ -44,7 +46,7 @@ function DashboardHeader({ storeInfo, stats, onRegister }: DashboardHeaderProps)
         {onRegister && (
           <div className="header-actions">
             <button className="header-register-btn" onClick={onRegister}>
-              📝 Register New Vendor
+              📝 Register New Vendor {showHotkeys && registerHotkey && <small className="hotkey register">({registerHotkey.toUpperCase()})</small>}
             </button>
           </div>
         )}
