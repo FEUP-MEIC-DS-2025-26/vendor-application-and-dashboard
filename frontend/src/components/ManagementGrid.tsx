@@ -20,10 +20,10 @@ function ManagementGrid({ stats, onAction, hotkeys = {}, showHotkeys = false }: 
             <p>Manage your entire inventory ({stats.products.active_products} active)</p>
           </div>
         </button>
-        <button className="management-card" onClick={() => (onAction ? onAction('orders') : console.log('Orders'))}>
+        <button className="management-card" onClick={() => (onAction ? onAction('view_orders') : console.log('Orders'))}>
           <div className="management-icon">📦</div>
           <div className="management-content">
-            <h3>Order Management {showHotkeys && hotkeys['orders'] && <small className="hotkey">({hotkeys['orders'].toUpperCase()})</small>}</h3>
+            <h3>Order Management {showHotkeys && hotkeys['view_orders'] && <small className="hotkey">({hotkeys['view_orders'].toUpperCase()})</small>}</h3>
             <p>View and process customer orders</p>
           </div>
         </button>

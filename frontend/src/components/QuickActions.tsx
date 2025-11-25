@@ -1,6 +1,6 @@
-import React from "react";
 import { QuickAction } from "../types/dashboard";
 import { ADD_PRODUCT_PAGE_URL } from "../config";
+import { SALES_ANALYTICS_PAGE_URL } from "../config";
 
 
 
@@ -20,20 +20,77 @@ function QuickActions({ actions, hotkeys = {}, showHotkeys = false, onAction }: 
       <div className="action-grid">
         {actions.map((action) => {
           if (action.id === "add_product") {
+            if (onAction) {
+              return (
+                <button
+                  key={action.id}
+                  className="action-card"
+                  onClick={() => onAction(action.id)}
+                >
+                  <div className="action-icon">{action.icon}</div>
+                  <div className="action-content">
+                    <h3>
+                      Suggest a product {showHotkeys && hotkeys[action.id] && <small className="hotkey">({hotkeys[action.id].toUpperCase()})</small>}
+                    </h3>
+                    <p>{action.description}</p>
+                  </div>
+                </button>
+              );
+            }
+
+            // fallback: preserve original external link behaviour when no handler
             return (
               <a
                 key={action.id}
                 className="action-card no-underline"
                 href={ADD_PRODUCT_PAGE_URL}
-                target="_blank"
                 rel="noopener noreferrer"
                 style={{ textDecoration: "none" }}
               >
                 <div className="action-icon">{action.icon}</div>
                 <div className="action-content">
+                  <h3>
+                    Suggest a product {showHotkeys && hotkeys[action.id] && <small className="hotkey">({hotkeys[action.id].toUpperCase()})</small>}
+                  </h3>
+                  <p>{action.description}</p>
+                </div>
+              </a>
+            );
+          }
+
+          if ((action.id === "view_analytics") || action.action === "view_analytics" || action.action === "analytics") {
+            if (onAction) {
+              return (
+                <button
+                  key={action.id}
+                  className="action-card"
+                  onClick={() => onAction(action.id)}
+                >
+                  <div className="action-icon">{action.icon}</div>
+                  <div className="action-content">
                     <h3>
-                      Suggest a product {showHotkeys && hotkeys[action.id] && <small className="hotkey">({hotkeys[action.id].toUpperCase()})</small>}
+                      Sales Analytics {showHotkeys && hotkeys[action.id] && <small className="hotkey">({hotkeys[action.id].toUpperCase()})</small>}
                     </h3>
+                    <p>{action.description}</p>
+                  </div>
+                </button>
+              );
+            }
+
+            // fallback: preserve original external link behaviour when no handler
+            return (
+              <a
+                key={action.id}
+                className="action-card no-underline"
+                href={SALES_ANALYTICS_PAGE_URL}
+                rel="noopener noreferrer"
+                style={{ textDecoration: "none" }}
+              >
+                <div className="action-icon">{action.icon}</div>
+                <div className="action-content">
+                  <h3>
+                    Sales Analytics {showHotkeys && hotkeys[action.id] && <small className="hotkey">({hotkeys[action.id].toUpperCase()})</small>}
+                  </h3>
                   <p>{action.description}</p>
                 </div>
               </a>

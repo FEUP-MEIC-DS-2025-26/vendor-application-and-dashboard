@@ -9,7 +9,7 @@ import QuickActions from "../components/QuickActions";
 import RecentOrders from "../components/RecentOrders";
 import ManagementGrid from "../components/ManagementGrid";
 import useGlobalHotkeys from "../hooks/useGlobalHotkeys";
-import { ADD_PRODUCT_PAGE_URL } from "../config";
+import { ADD_PRODUCT_PAGE_URL, SALES_ANALYTICS_PAGE_URL } from "../config";
 
 interface DashboardProps {
   navigate: (to: string) => void;
@@ -70,7 +70,7 @@ function Dashboard({ navigate }: DashboardProps) {
     (actionId: string) => {
       switch (actionId) {
         case "add_product":
-          window.open(ADD_PRODUCT_PAGE_URL, "_blank", "noopener");
+          window.open(ADD_PRODUCT_PAGE_URL, "_self", "noopener");
           break;
         case "view_orders":
           navigate("/orders");
@@ -83,8 +83,8 @@ function Dashboard({ navigate }: DashboardProps) {
         // Support both 'analytics' and 'view_analytics'
         case "view_analytics":
         case "analytics":
-          navigate("/analytics");
-          break;
+            window.open(SALES_ANALYTICS_PAGE_URL, "_self", "noopener");
+            break;
         default:
           console.log("Quick action triggered:", actionId);
       }
@@ -92,38 +92,40 @@ function Dashboard({ navigate }: DashboardProps) {
     [navigate]
   );
 
-  // Map specific keys to specific quick action ids (explicit mapping)
-  // p -> add_product, o -> view_orders, i -> view_inventory, a -> view_analytics
+  // Use the raw quick actions from the dashboard; components and key wiring
+  // will match either the `id` or the `action` metadata to determine behavior.
   const quickActionsList = dashboardData?.quick_actions ?? [];
-  const explicitKeyMap: Record<string, string> = {
+
+  // Merge quick-action and management key maps into a single canonical map.
+  // We will wire each key to a quick-action handler if the backend exposes
+  // the corresponding action; otherwise we fall back to the management handler.
+  const keyMap: Record<string, string> = {
     p: "add_product",
     o: "view_orders",
-    // backend and frontend mock use slightly different ids for these actions
     i: "inventory",
     a: "analytics",
+    c: "catalog",
+    s: "settings",
   };
 
   const quickActionHandlers: Record<string, () => void> = {};
   const hotkeys: Record<string, string> = {};
-
-  // Only wire handlers for actions that are present in the dashboard data
-  for (const [key, actionId] of Object.entries(explicitKeyMap)) {
-    const found = quickActionsList.find((a) => a.id === actionId);
-    if (found) {
-      quickActionHandlers[key] = () => handleQuickAction(actionId);
-      hotkeys[actionId] = key;
-    }
-  }
-
-  // Management section hotkeys: c -> catalog, s -> settings, a -> analytics, o -> orders
-  const managementKeyMap: Record<string, string> = {
-    c: "catalog",
-    s: "settings",
-    a: "analytics",
-    o: "orders",
-  };
-
   const managementHotkeys: Record<string, string> = {};
+
+  for (const [key, actionId] of Object.entries(keyMap)) {
+    // Prefer quick-action if present in the dashboard data (id or action metadata)
+    const found = quickActionsList.find((a) => a.id === actionId || a.action === actionId);
+    if (found) {
+      const handlerId = found.id ?? found.action ?? actionId;
+      quickActionHandlers[key] = () => handleQuickAction(handlerId);
+      hotkeys[found.id || found.action || actionId] = key;
+      continue;
+    }
+
+    // Fallback to management handler
+    quickActionHandlers[key] = () => handleManagementAction(actionId);
+    managementHotkeys[actionId] = key;
+  }
 
   // management action handler (used by the grid and hotkeys)
   const handleManagementAction = useCallback(
@@ -133,11 +135,11 @@ function Dashboard({ navigate }: DashboardProps) {
           // route to inventory/catalog view
           navigate("/inventory");
           break;
-        case "orders":
+        case "view_orders":
           navigate("/orders");
           break;
         case "analytics":
-          navigate("/analytics");
+          window.open(SALES_ANALYTICS_PAGE_URL, "_self", "noopener");
           break;
         case "settings":
           navigate("/settings");
@@ -149,14 +151,7 @@ function Dashboard({ navigate }: DashboardProps) {
     [navigate]
   );
 
-  // Register management keys into hotkey handlers and build hotkey map for the grid
-  for (const [key, actionId] of Object.entries(managementKeyMap)) {
-    // add management handler to global handlers only if not already set
-    if (!quickActionHandlers[key]) {
-      quickActionHandlers[key] = () => handleManagementAction(actionId);
-    }
-    managementHotkeys[actionId] = key;
-  }
+  // (Key wiring completed above by merging maps)
 
   // Register global hotkeys: r = refresh, n = go to vendor register, h/? = toggle hotkey helpers
   useGlobalHotkeys({
