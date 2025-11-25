@@ -3,12 +3,11 @@ import { DashboardStats } from "../types/dashboard";
 
 interface ManagementGridProps {
   stats: DashboardStats;
-  onAction?: (actionId: string) => void;
   hotkeys?: Record<string, string>;
   showHotkeys?: boolean;
 }
 
-function ManagementGrid({ stats, onAction, hotkeys = {}, showHotkeys = false }: ManagementGridProps) {
+function ManagementGrid({ stats, hotkeys = {}, showHotkeys = false }: ManagementGridProps) {
   return (
     <section className="dashboard-section">
       <h2 className="section-title">Manage Your Shop</h2>
