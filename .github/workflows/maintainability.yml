@@ -1,0 +1,54 @@
+name: Maintainability Checks
+
+on:
+  push:
+    branches: [ main, development ]
+  pull_request:
+    branches: [ main, development ]
+
+jobs:
+  maintainability:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x]
+        python-version: [3.11]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install frontend dependencies
+        working-directory: frontend
+        run: npm ci
+
+      - name: Install ESLint plugins for maintainability
+        working-directory: frontend
+        run: npm install --save-dev eslint-plugin-sonarjs eslint-plugin-complexity
+
+      - name: Run ESLint with maintainability rules
+        working-directory: frontend
+        run: npx eslint src --ext .ts,.tsx --max-warnings=0
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install maintainability tools (radon)
+        working-directory: backend
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install radon
+
+      - name: Run Radon (Cyclomatic Complexity)
+        working-directory: backend
+        run: radon cc -s -a app
+
+      - name: Run Radon (Maintainability Index)
+        working-directory: backend
+        run: radon mi -s app

@@ -9,6 +9,8 @@ interface DashboardHeaderProps {
   };
   stats: DashboardStats;
   onRegister?: () => void;
+  showHotkeys?: boolean;
+  registerHotkey?: string;
 }
 
 const DashboardHeader: React.FC<DashboardHeaderProps> = ({

@@ -29,6 +29,12 @@ export interface QuickAction {
   action: string;
 }
 
+// NEW: Interface for chart data
+export interface SalesDataPoint {
+  date: string;
+  sales: number;
+}
+
 export interface DashboardData {
   success: boolean;
   timestamp: string;
@@ -39,6 +45,8 @@ export interface DashboardData {
   };
   stats: DashboardStats;
   recent_orders: RecentOrder[];
+  // NEW: Array of sales data points
+  sales_chart: SalesDataPoint[];
   quick_actions: QuickAction[];
   error?: string;
 }

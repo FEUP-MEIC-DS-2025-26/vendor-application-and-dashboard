@@ -9,7 +9,7 @@ export const api = axios.create({
   },
 });
 
-// You can optionally add interceptors here later
+// add interceptors here later
 api.interceptors.response.use(
   (res) => res,
   (error) => {

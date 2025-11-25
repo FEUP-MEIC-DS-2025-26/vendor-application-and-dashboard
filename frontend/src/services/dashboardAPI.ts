@@ -3,17 +3,20 @@ import { api } from "../services/client";
 
 class DashboardAPI {
   /**
-   * Fetch all dashboard data in a single call
+   * Fetch all dashboard data.
+   * @param period 'daily', 'weekly', or 'monthly'
    */
-  async getDashboardData(): Promise<DashboardData> {
+  async getDashboardData(period: string = 'daily'): Promise<DashboardData> {
     try {
-      console.log("🔍 Attempting to fetch dashboard data...");
-      const { data } = await api.get<DashboardData>("/dashboard");
+      console.log(`🔍 Fetching dashboard data (${period})...`);
+      // Pass the period as a query parameter
+      const { data } = await api.get<DashboardData>("/dashboard", {
+        params: { period }
+      });
 
       console.log("✅ Dashboard data received:", data);
       return data;
     } catch (error: unknown) {
-      // Narrow the unknown error before accessing properties
       let msg = "Unable to fetch dashboard data";
       if (error instanceof Error) {
         msg = error.message || msg;
@@ -22,23 +25,18 @@ class DashboardAPI {
         console.error("❌ Failed to fetch dashboard data:", error);
       }
 
-      // Return a fallback object to prevent crashes
       const fallbackData = this.getFallbackDashboard();
       fallbackData.error = msg;
       return fallbackData;
     }
   }
 
-  /**
-   * Check backend & Jumpseller API health
-   */
   async checkHealth(): Promise<{ backend: boolean; jumpseller: boolean }> {
     try {
       const [backend, jumpseller] = await Promise.all([
         api.get("/../health").then(() => true).catch(() => false),
         api.get("/jumpseller/health").then(() => true).catch(() => false),
       ]);
-
       return { backend, jumpseller };
     } catch (error) {
       console.error("❌ Health check failed:", error);
@@ -46,24 +44,17 @@ class DashboardAPI {
     }
   }
 
-  /**
-   * Register a new vendor
-   */
   async registerVendor(
     vendorData: Record<string, unknown>
   ): Promise<{ success: boolean; data?: unknown; error?: string }> {
     try {
       console.log("📝 Submitting vendor registration...");
       const { data } = await api.post("/vendors/register", vendorData);
-
       console.log("✅ Vendor registration successful:", data);
       return { success: true, data };
     } catch (error: unknown) {
-      // Narrow error and safely extract message/detail if available
       console.error("❌ Vendor registration failed:", error);
-
       let message = "Failed to register vendor";
-      // Try to extract axios-like response detail if present
       if (typeof error === "object" && error !== null) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const errObj = error as any;
@@ -71,17 +62,10 @@ class DashboardAPI {
       } else if (typeof error === "string") {
         message = error;
       }
-
-      return {
-        success: false,
-        error: message,
-      };
+      return { success: false, error: message };
     }
   }
 
-  /**
-   * Fallback dashboard data (offline mode)
-   */
   private getFallbackDashboard(): DashboardData {
     return {
       success: false,
@@ -102,6 +86,7 @@ class DashboardAPI {
         { id: "inventory", title: "Check Inventory", description: "Monitor stock levels", icon: "📊", action: "view_inventory" },
         { id: "analytics", title: "Sales Analytics", description: "View performance metrics", icon: "📈", action: "view_analytics" },
       ],
+      sales_chart: [] // Empty chart for fallback
     };
   }
 }

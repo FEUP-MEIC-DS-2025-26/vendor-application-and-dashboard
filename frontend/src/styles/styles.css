@@ -1258,3 +1258,37 @@ footer {
   }
 }
 
+/* Hotkey badge styling (used next to buttons and action titles) */
+.hotkey {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 6px;
+  background: rgba(139, 90, 60, 0.08);
+  color: var(--warm-brown);
+  font-size: 0.8rem;
+  font-weight: 700;
+  margin-left: 8px;
+  border: 1px solid rgba(139, 90, 60, 0.08);
+}
+
+kbd {
+  background: rgba(0,0,0,0.05);
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Segoe UI Mono", "Helvetica Neue", monospace;
+  font-size: 0.85em;
+  border: 1px solid rgba(0,0,0,0.06);
+}
+
+/* Variant for the register button hotkey: match button text color */
+.hotkey.register {
+  background: rgba(255, 255, 255, 0.14);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
