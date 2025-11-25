@@ -1,15 +1,17 @@
-
 import React from "react";
 import { QuickAction } from "../types/dashboard";
 import { ADD_PRODUCT_PAGE_URL } from "../config";
 
-
-
 interface QuickActionsProps {
   actions: QuickAction[];
+  // optional mapping from action id to a single-character hotkey (e.g. { add_product: 'p' })
+  hotkeys?: Record<string, string>;
+  // whether to show the hotkey badges
+  showHotkeys?: boolean;
+  onAction?: (actionId: string) => void;
 }
 
-function QuickActions({ actions }: QuickActionsProps) {
+function QuickActions({ actions, hotkeys = {}, showHotkeys = false, onAction }: QuickActionsProps) {
   return (
     <section className="dashboard-section">
       <h2 className="section-title">Quick Actions</h2>
@@ -25,23 +27,32 @@ function QuickActions({ actions }: QuickActionsProps) {
                 rel="noopener noreferrer"
                 style={{ textDecoration: "none" }}
               >
-                <div className="action-icon">{action.icon}</div>
+                <div className="action-icon" aria-hidden="true">
+                  {action.icon}
+                </div>
                 <div className="action-content">
-                  <h3>Suggest a product</h3>
+                    <h3>
+                      Suggest a product {showHotkeys && hotkeys[action.id] && <small className="hotkey">({hotkeys[action.id].toUpperCase()})</small>}
+                    </h3>
                   <p>{action.description}</p>
                 </div>
               </a>
             );
           }
+
           return (
             <button
               key={action.id}
               className="action-card"
-              onClick={() => console.log(`Action: ${action.action}`)}
+              onClick={() => (onAction ? onAction(action.id) : console.log(`Action: ${action.action}`))}
             >
-              <div className="action-icon">{action.icon}</div>
+              <div className="action-icon" aria-hidden="true">
+                {action.icon}
+              </div>
               <div className="action-content">
-                <h3>{action.title}</h3>
+                  <h3>
+                    {action.title} {showHotkeys && hotkeys[action.id] && <small className="hotkey">({hotkeys[action.id].toUpperCase()})</small>}
+                  </h3>
                 <p>{action.description}</p>
               </div>
             </button>

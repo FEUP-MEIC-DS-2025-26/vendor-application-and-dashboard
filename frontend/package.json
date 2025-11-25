@@ -6,6 +6,7 @@
     "dev": "vite",
     "lint": "eslint 'src/**/*.{ts,tsx,js,jsx}' --max-warnings=0",
     "build": "vite build",
+    "start": "node server.js",
     "preview": "vite preview",
     "test": "vitest",
     "test:ui": "vitest --ui",
@@ -13,12 +14,15 @@
   },
   "dependencies": {
     "@sentry/react": "^10.25.0",
+    "@sentry/vite-plugin": "^4.6.0",
     "axios": "^1.13.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^7.9.6"
+    "react-router-dom": "^7.9.6",
+    "recharts": "^3.4.1"
   },
   "devDependencies": {
+    "@originjs/vite-plugin-federation": "^1.4.1",
     "@playwright/test": "^1.56.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.0",
