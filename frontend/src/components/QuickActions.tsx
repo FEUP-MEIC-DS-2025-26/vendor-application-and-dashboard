@@ -1,9 +1,6 @@
-
 import React from "react";
 import { QuickAction } from "../types/dashboard";
 import { ADD_PRODUCT_PAGE_URL } from "../config";
-
-
 
 interface QuickActionsProps {
   actions: QuickAction[];
@@ -25,7 +22,9 @@ function QuickActions({ actions }: QuickActionsProps) {
                 rel="noopener noreferrer"
                 style={{ textDecoration: "none" }}
               >
-                <div className="action-icon">{action.icon}</div>
+                <div className="action-icon" aria-hidden="true">
+                  {action.icon}
+                </div>
                 <div className="action-content">
                   <h3>Suggest a product</h3>
                   <p>{action.description}</p>
@@ -33,13 +32,16 @@ function QuickActions({ actions }: QuickActionsProps) {
               </a>
             );
           }
+
           return (
             <button
               key={action.id}
               className="action-card"
               onClick={() => console.log(`Action: ${action.action}`)}
             >
-              <div className="action-icon">{action.icon}</div>
+              <div className="action-icon" aria-hidden="true">
+                {action.icon}
+              </div>
               <div className="action-content">
                 <h3>{action.title}</h3>
                 <p>{action.description}</p>
