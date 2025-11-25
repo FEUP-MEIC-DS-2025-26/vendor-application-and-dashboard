@@ -11,7 +11,6 @@ interface Question {
   answer: string;
 }
 
-
 const VERIFICATION_QUESTIONS = [
   {
     id: "delivery_method",
@@ -77,7 +76,6 @@ function VendorRegister({ onSuccess, onCancel }: VendorRegisterProps) {
     if (!formData.email.trim()) return "Email is required";
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) return "Invalid email";
     
-    // Check all questions are answered
     for (const question of VERIFICATION_QUESTIONS) {
       if (!answers[question.id] || answers[question.id].trim().length < 10) {
         return `Please answer the question: "${question.text}" (minimum 10 characters)`;
@@ -100,51 +98,32 @@ function VendorRegister({ onSuccess, onCancel }: VendorRegisterProps) {
     setLoading(true);
 
     try {
-      // Format questions for API
       const questions: Question[] = VERIFICATION_QUESTIONS.map(q => ({
         question_id: q.id,
         question_text: q.text,
         answer: answers[q.id]
       }));
 
-      const payload = {
-        ...formData,
-        questions
-      };
-
-      console.log("Submitting vendor registration:", payload);
+      const payload = { ...formData, questions };
 
       const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000/api";
       const response = await fetch(`${API_URL}/vendors/register`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)
       });
 
       const data = await response.json();
 
-      if (!response.ok) {
-        throw new Error(data.detail || "Registration failed");
-      }
+      if (!response.ok) throw new Error(data.detail || "Registration failed");
 
-      console.log("Registration successful:", data);
       setSuccess(true);
-      
-      if (onSuccess) {
-        setTimeout(() => onSuccess(), 2000);
-      }
+      if (onSuccess) setTimeout(() => onSuccess(), 2000);
 
     } catch (err: unknown) {
-      console.error("Registration error:", err);
-      // Narrow the error before accessing properties
       let message = "Error submitting registration. Please try again.";
-      if (err instanceof Error) {
-        message = err.message || message;
-      } else if (typeof err === 'string') {
-        message = err;
-      }
+      if (err instanceof Error) message = err.message || message;
+      else if (typeof err === "string") message = err;
       setError(message);
     } finally {
       setLoading(false);
@@ -178,14 +157,16 @@ function VendorRegister({ onSuccess, onCancel }: VendorRegisterProps) {
 
       {error && (
         <div className="register-error">
-          <span className="register-error-icon">⚠️</span> {error}
+          <span className="register-error-icon" aria-hidden="true">⚠️</span> {error}
         </div>
       )}
 
       <form className="register-form" onSubmit={handleSubmit}>
         {/* Store Information */}
         <section className="register-section">
-          <h2 className="register-section-title">📍 Store Information</h2>
+          <h2 className="register-section-title">
+            <span aria-hidden="true">📍</span> Store Information
+          </h2>
           <div className="register-field">
             <label className="register-label">Store Name / Brand *</label>
             <input
@@ -224,7 +205,9 @@ function VendorRegister({ onSuccess, onCancel }: VendorRegisterProps) {
 
         {/* Contact Information */}
         <section className="register-section">
-          <h2 className="register-section-title">👤 Contact Information</h2>
+          <h2 className="register-section-title">
+            <span aria-hidden="true">👤</span> Contact Information
+          </h2>
           <div className="register-field">
             <label className="register-label">Owner Name *</label>
             <input
@@ -290,7 +273,9 @@ function VendorRegister({ onSuccess, onCancel }: VendorRegisterProps) {
 
         {/* Verification Questions */}
         <section className="register-section">
-          <h2 className="register-section-title">✅ Verification Questions</h2>
+          <h2 className="register-section-title">
+            <span aria-hidden="true">✅</span> Verification Questions
+          </h2>
           <p className="register-section-desc">
             Please answer the following questions to help our team verify your profile.
           </p>

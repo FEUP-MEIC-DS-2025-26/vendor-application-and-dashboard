@@ -2,8 +2,6 @@ import { QuickAction } from "../types/dashboard";
 import { ADD_PRODUCT_PAGE_URL } from "../config";
 import { SALES_ANALYTICS_PAGE_URL } from "../config";
 
-
-
 interface QuickActionsProps {
   actions: QuickAction[];
   // optional mapping from action id to a single-character hotkey (e.g. { add_product: 'p' })
@@ -47,7 +45,9 @@ function QuickActions({ actions, hotkeys = {}, showHotkeys = false, onAction }: 
                 rel="noopener noreferrer"
                 style={{ textDecoration: "none" }}
               >
-                <div className="action-icon">{action.icon}</div>
+                <div className="action-icon" aria-hidden="true">
+                  {action.icon}
+                </div>
                 <div className="action-content">
                   <h3>
                     Suggest a product {showHotkeys && hotkeys[action.id] && <small className="hotkey">({hotkeys[action.id].toUpperCase()})</small>}
@@ -96,13 +96,16 @@ function QuickActions({ actions, hotkeys = {}, showHotkeys = false, onAction }: 
               </a>
             );
           }
+
           return (
             <button
               key={action.id}
               className="action-card"
               onClick={() => (onAction ? onAction(action.id) : console.log(`Action: ${action.action}`))}
             >
-              <div className="action-icon">{action.icon}</div>
+              <div className="action-icon" aria-hidden="true">
+                {action.icon}
+              </div>
               <div className="action-content">
                   <h3>
                     {action.title} {showHotkeys && hotkeys[action.id] && <small className="hotkey">({hotkeys[action.id].toUpperCase()})</small>}

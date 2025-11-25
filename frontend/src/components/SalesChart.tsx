@@ -24,10 +24,10 @@ const SalesChart: React.FC<SalesChartProps> = ({ data, currency }) => {
     );
   }
 
-  // Format date to be shorter (e.g., "11-22")
+  // Formata a data para "MM-DD"
   const formattedData = data.map(item => ({
     ...item,
-    shortDate: item.date.substring(5) // removes YYYY-
+    shortDate: item.date.substring(5),
   }));
 
   return (
@@ -37,12 +37,7 @@ const SalesChart: React.FC<SalesChartProps> = ({ data, currency }) => {
         <ResponsiveContainer>
           <AreaChart
             data={formattedData}
-            margin={{
-              top: 10,
-              right: 30,
-              left: 0,
-              bottom: 0,
-            }}
+            margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
           >
             <defs>
               <linearGradient id="colorSales" x1="0" y1="0" x2="0" y2="1">
@@ -52,16 +47,16 @@ const SalesChart: React.FC<SalesChartProps> = ({ data, currency }) => {
             </defs>
             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e0e0e0" />
             <XAxis 
-              dataKey="shortDate" 
-              tick={{ fontSize: 12, fill: "#6b7280" }} 
+              dataKey="shortDate"
+              tick={{ fontSize: 12, fill: "#6b7280" }}
               tickLine={false}
               axisLine={false}
             />
             <YAxis 
-              tick={{ fontSize: 12, fill: "#6b7280" }} 
+              tick={{ fontSize: 12, fill: "#6b7280" }}
               tickLine={false}
               axisLine={false}
-              tickFormatter={(value) => `${currency}${value}`}
+              tickFormatter={(value: number | string) => `${currency}${value}`}
             />
             <Tooltip
               contentStyle={{ 
@@ -70,7 +65,7 @@ const SalesChart: React.FC<SalesChartProps> = ({ data, currency }) => {
                 border: "1px solid #e2e8f0",
                 boxShadow: "0 4px 6px rgba(0,0,0,0.1)"
               }}
-              formatter={(value: number) => [`${currency}${value}`, "Sales"]}
+              formatter={(value: number | string) => [`${currency}${value}`, "Sales"]}
             />
             <Area
               type="monotone"

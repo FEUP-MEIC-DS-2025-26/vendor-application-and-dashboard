@@ -46,7 +46,8 @@ function DashboardHeader({ storeInfo, stats, onRegister, showHotkeys = false, re
         {onRegister && (
           <div className="header-actions">
             <button className="header-register-btn" onClick={onRegister}>
-              📝 Register New Vendor {showHotkeys && registerHotkey && <small className="hotkey register">({registerHotkey.toUpperCase()})</small>}
+              <span aria-hidden="true">📝</span> Register New Vendor 
+              {showHotkeys && registerHotkey && <small className="hotkey register">({registerHotkey.toUpperCase()})</small>}
             </button>
           </div>
         )}
