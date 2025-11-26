@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
+from uvicorn.middleware.proxy_headers import ProxyHeadersMiddleware 
 from app.api.routes import router as jumpseller_router
 from app.core.config import settings
 from app.api.vendors import router as vendors_router
@@ -21,23 +22,28 @@ if settings.sentry_dsn:
     sentry_sdk.init(
         dsn=settings.sentry_dsn,
         integrations=[FastApiIntegration()],
-        # Use ENVIRONMENT variable (e.g., "production", "development")
         environment=os.getenv("ENVIRONMENT", "development"),
-        traces_sample_rate=1.0, # Monitor performance
+        traces_sample_rate=1.0, 
     )
     logger.info("Sentry telemetry initialized for backend.")
 # -----------------------------
 
 app = FastAPI(title=settings.app_name, debug=settings.debug)
 
+
+# Isto permite ao Backend saber que está atrás de uma Gateway e confiar nos headers
+app.add_middleware(ProxyHeadersMiddleware, trusted_hosts=["*"])
+# -----------------------------------------------
+
 # Configure CORS for frontend integration
-cors_origins = ["http://localhost:5173", "http://localhost:3000"]
+cors_origins = ["http://localhost:5173", "http://localhost:3000", "*"]
 frontend_url = getattr(app_settings, "frontend_url", None)
 if frontend_url:
     cors_origins.append(frontend_url)
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=cors_origins,
+    allow_origins=cors_origins, # Agora inclui "*"
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -53,9 +59,7 @@ app.include_router(vendors_router)
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 FRONTEND_DIST = ROOT / "frontend" / "dist"
 
-
 if FRONTEND_DIST.exists():
-    # Serve the built frontend as static files (if present)
     app.mount("/", StaticFiles(directory=str(FRONTEND_DIST), html=True), name="frontend")
 else:
     @app.get("/")
@@ -66,22 +70,6 @@ else:
             "frontend_build": "cd frontend && npm install && npm run build"
         })
 
-
 @app.get("/api/health")
 def health():
     return {"status": "ok", "message": "Vendor Application Backend is running"}
-
-
-# --- Sentry Test Endpoints (Commented out - only for testing) ---
-# @app.get("/api/test-sentry-error")
-# def test_sentry_error():
-#     """Trigger a test error to verify Sentry is working"""
-#     raise Exception("Sentry Test Error from Backend")
-#
-#
-# @app.get("/api/test-sentry-message")
-# def test_sentry_message():
-#     """Send a test message to Sentry"""
-#     sentry_sdk.capture_message("Sentry Test Message from Backend", level="info")
-#     return {"message": "Test message sent to Sentry"}
-# ----------------------------
