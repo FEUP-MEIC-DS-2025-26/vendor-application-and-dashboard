@@ -1,7 +1,9 @@
+
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import federation from '@originjs/vite-plugin-federation'
 import path from 'path'
+import manifest from './federation-manifest'
 
 export default defineConfig({
   plugins: [
@@ -15,6 +17,16 @@ export default defineConfig({
       },
       shared: ['react', 'react-dom', 'react-router-dom']
     })
+    ,
+    {
+      name: 'serve-federation-manifest',
+      configureServer(server) {
+        server.middlewares.use('/federation-manifest.json', (req, res) => {
+          res.setHeader('Content-Type', 'application/json');
+          res.end(JSON.stringify(manifest));
+        });
+      }
+    }
   ],
   resolve: {
     alias: { '@': path.resolve(__dirname, 'src') }
