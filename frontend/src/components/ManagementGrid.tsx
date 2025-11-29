@@ -29,7 +29,7 @@ function ManagementGrid({ stats, onAction, hotkeys = {}, showHotkeys = false }: 
           </div>
         </button>
 
-        <button className="management-card" onClick={() => (onAction ? onAction('analytics') : console.log('Analytics'))}>
+        <button className="management-card" onClick={() => {console.log('Analytics'); window.open('https://performance-table-133525542893.us-central1.run.app/search/1', '_blank'); }}>
           <div className="management-icon" aria-hidden="true">📊</div>
           <div className="management-content">
             <h3>Analytics {showHotkeys && hotkeys['analytics'] && <small className="hotkey">({hotkeys['analytics'].toUpperCase()})</small>}</h3>
@@ -51,3 +51,4 @@ function ManagementGrid({ stats, onAction, hotkeys = {}, showHotkeys = false }: 
 }
 
 export default ManagementGrid;
+
