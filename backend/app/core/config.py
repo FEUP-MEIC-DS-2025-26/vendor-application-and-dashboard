@@ -15,6 +15,8 @@ class Settings(BaseSettings):
     add_product_page_url: str = ""
     frontend_url: str = ""
 
+    create_seller_url: Optional[str] = None
+    
     # Google Cloud Pub/Sub settings
     gcp_project_id: str = ""
     gcp_pubsub_topic: str = ""
