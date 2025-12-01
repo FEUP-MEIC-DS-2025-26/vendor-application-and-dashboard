@@ -1,4 +1,3 @@
-
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import federation from '@originjs/vite-plugin-federation'
@@ -15,7 +14,7 @@ export default defineConfig({
         './VendorRegister': './src/pages/VendorRegister.tsx',
         './Dashboard': './src/pages/Dashboard.tsx'
       },
-      shared: ['react', 'react-dom', 'react-router-dom']
+      shared: ['react', 'react-dom', 'react-router-dom'],
     }),
     {
       name: 'serve-federation-manifest',
@@ -32,13 +31,17 @@ export default defineConfig({
     alias: { '@': path.resolve(__dirname, 'src') }
   },
   build: {
-    target: 'esnext',
+    // alvo que evita features ESM modernas no output
+    target: 'es2020',
     cssCodeSplit: false,
-    assetsInlineLimit: 100000000, // inline all assets to avoid chunking
+    assetsInlineLimit: 100_000_000,
     rollupOptions: {
       output: {
+        // garante um único ficheiro clássico (IIFE/UMD)
+        format: 'iife',                // iife funciona bem para scripts injetados como <script>
+        name: 'mips_vendor',           // nome global usado pelo bundle IIFE/UMD
         entryFileNames: 'remoteEntry.js',
-        format: 'esm',
+        inlineDynamicImports: true,    // força tudo num único bundle (evita chunks async)
       },
     },
   },
