@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "vite",
     "lint": "eslint 'src/**/*.{ts,tsx,js,jsx}' --max-warnings=0",
-    "build": "vite build && tsc src/../federation-manifest.ts --outDir . --esModuleInterop --module commonjs && node scripts/generate-federation-manifest.js",
+    "build": "vite build && tsc src/../federation-manifest.ts --outDir . --esModuleInterop --module commonjs && node scripts/generate-federation-manifest.js && mv dist/assets/remoteEntry.js dist/remoteEntry.js || true",
     "start": "node server.js",
     "preview": "vite preview",
     "test": "vitest",
