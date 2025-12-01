@@ -23,6 +23,7 @@ export default defineConfig({
       configureServer(server) {
         server.middlewares.use('/federation-manifest.json', (req, res) => {
           res.setHeader('Content-Type', 'application/json');
+          res.setHeader('Access-Control-Allow-Origin', 'https://microfrontend-host-1054126107932.europe-west1.run.app');
           res.end(JSON.stringify(manifest));
         });
       }
