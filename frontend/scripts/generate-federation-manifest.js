@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const manifest = require('../federation-manifest').default;
+const manifest = require('../federation-manifest.js').default;
 
 const outDir = path.resolve(__dirname, '../dist');
 const outFile = path.join(outDir, 'federation-manifest.json');
