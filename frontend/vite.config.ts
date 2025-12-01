@@ -38,7 +38,7 @@ export default defineConfig({
     modulePreload: true,
     rollupOptions: {
       output: {
-        format: 'system',
+        format: 'es',
         name: 'mips_vendor',
         entryFileNames: 'remoteEntry.js'
       }
