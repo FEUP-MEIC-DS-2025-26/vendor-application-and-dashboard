@@ -31,18 +31,7 @@ export default defineConfig({
     alias: { '@': path.resolve(__dirname, 'src') }
   },
   build: {
-    // alvo que evita features ESM modernas no output
-    target: 'es2020',
+    target: 'esnext',
     cssCodeSplit: false,
-    assetsInlineLimit: 100_000_000,
-    rollupOptions: {
-      output: {
-        // garante um único ficheiro clássico (IIFE/UMD)
-        format: 'iife',                // iife funciona bem para scripts injetados como <script>
-        name: 'mips_vendor',           // nome global usado pelo bundle IIFE/UMD
-        entryFileNames: 'remoteEntry.js',
-        inlineDynamicImports: true,    // força tudo num único bundle (evita chunks async)
-      },
-    },
-  },
+  }
 })
