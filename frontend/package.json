@@ -5,16 +5,18 @@
   "scripts": {
     "dev": "rsbuild dev --open",
     "build": "rsbuild build",
-    "preview": "rsbuild preview"
+    "preview": "rsbuild preview",
+    "test": "vitest run",
+    "test:ui": "vitest"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
-    "@sentry/react": "^10.25.0",
-    "@sentry/vite-plugin": "^4.6.0",
     "@mui/icons-material": "^7.3.5",
     "@mui/material": "^7.3.5",
     "@mui/system": "^7.3.5",
+    "@sentry/react": "^10.25.0",
+    "@sentry/vite-plugin": "^4.6.0",
     "axios": "^1.13.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -23,15 +25,14 @@
   },
   "devDependencies": {
     "@module-federation/rsbuild-plugin": "^0.21.3",
+    "@playwright/test": "^1.56.1",
     "@rsbuild/core": "^1.2.15",
     "@rsbuild/plugin-react": "^1.1.1",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.0",
     "@types/jest": "^30.0.0",
     "@types/react": "^18.3.11",
     "@types/react-dom": "~18.3.1",
-    "typescript": "^5.7.2",
-    "@playwright/test": "^1.56.1",
-    "@testing-library/jest-dom": "^6.9.1",
-    "@testing-library/react": "^16.3.0",
     "@typescript-eslint/eslint-plugin": "^6.10.0",
     "@typescript-eslint/parser": "^6.10.0",
     "@vitejs/plugin-react": "^4.7.0",
@@ -40,6 +41,8 @@
     "eslint": "^8.50.0",
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",
-    "jsdom": "^27.2.0"
+    "jsdom": "^27.2.0",
+    "typescript": "^5.7.2",
+    "vitest": "^4.0.14"
   }
 }
