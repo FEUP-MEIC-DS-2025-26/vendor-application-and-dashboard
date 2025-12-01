@@ -1,4 +1,3 @@
-import React from "react";
 import { DashboardStats } from "../types/dashboard";
 
 interface ManagementGridProps {
