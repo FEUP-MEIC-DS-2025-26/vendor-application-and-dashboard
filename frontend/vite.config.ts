@@ -16,8 +16,7 @@ export default defineConfig({
         './Dashboard': './src/pages/Dashboard.tsx'
       },
       shared: ['react', 'react-dom', 'react-router-dom']
-    })
-    ,
+    }),
     {
       name: 'serve-federation-manifest',
       configureServer(server) {
@@ -31,5 +30,16 @@ export default defineConfig({
   ],
   resolve: {
     alias: { '@': path.resolve(__dirname, 'src') }
-  }
+  },
+  build: {
+    target: 'esnext',
+    cssCodeSplit: false,
+    assetsInlineLimit: 100000000, // inline all assets to avoid chunking
+    rollupOptions: {
+      output: {
+        entryFileNames: 'remoteEntry.js',
+        format: 'esm',
+      },
+    },
+  },
 })
