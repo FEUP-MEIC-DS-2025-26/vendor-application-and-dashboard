@@ -71,6 +71,7 @@ jobs:
       uses: pnpm/action-setup@v3
       with:
         version: 8
+        global: true
 
     - name: 3. Install dependencies
       run: pnpm install --frozen-lockfile
