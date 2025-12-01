@@ -15,6 +15,8 @@ export default defineConfig({
         './Dashboard': './src/pages/Dashboard.tsx'
       },
       shared: ['react', 'react-dom', 'react-router-dom'],
+      // Ensures output is ESM for host compatibility
+      remotes: {},
     }),
     {
       name: 'serve-federation-manifest',
@@ -33,5 +35,11 @@ export default defineConfig({
   build: {
     target: 'esnext',
     cssCodeSplit: false,
+    modulePreload: true,
+    rollupOptions: {
+      output: {
+        format: 'es',
+      }
+    }
   }
 })
