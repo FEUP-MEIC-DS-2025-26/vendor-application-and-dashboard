@@ -276,7 +276,7 @@ function VendorRegister({ onSuccess, onCancel }: VendorRegisterProps) {
           <h2 className="register-section-title">
             <span aria-hidden="true">✅</span> Verification Questions
           </h2>
-          <p className="register-section-desc">
+          <p className="register-section_desc">
             Please answer the following questions to help our team verify your profile.
           </p>
           {VERIFICATION_QUESTIONS.map((question, index) => (

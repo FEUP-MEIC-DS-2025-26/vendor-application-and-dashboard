@@ -93,8 +93,11 @@ describe("DashboardHeader", () => {
       />
     );
 
+    // Use a function matcher to allow for split emoji/text
     expect(
-      screen.getByText("📝 Register New Vendor")
+      screen.getByText((content, element) =>
+        content.includes("Register New Vendor")
+      )
     ).toBeInTheDocument();
   });
 

@@ -1,4 +1,3 @@
-import React from "react";
 import { RecentOrder } from "../types/dashboard";
 
 interface RecentOrdersProps {

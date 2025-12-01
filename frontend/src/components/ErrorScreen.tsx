@@ -1,5 +1,3 @@
-import React from "react";
-
 interface ErrorScreenProps {
   error: string | null;
   onRetry: () => void;
