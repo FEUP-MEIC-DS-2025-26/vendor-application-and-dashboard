@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "vite",
     "lint": "eslint 'src/**/*.{ts,tsx,js,jsx}' --max-warnings=0",
-    "build": "vite build",
+    "build": "vite build && node scripts/generate-federation-manifest.js",
     "start": "node server.js",
     "preview": "vite preview",
     "test": "vitest",
