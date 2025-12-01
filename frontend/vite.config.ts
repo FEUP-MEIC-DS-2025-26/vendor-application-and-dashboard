@@ -31,12 +31,7 @@ export default defineConfig({
     alias: { '@': path.resolve(__dirname, 'src') }
   },
   build: {
-    target: 'esnext', // or 'modules'
-    lib: {
-      entry: 'src/main.ts',
-      name: 'VendorRemote',
-      formats: ['umd'], // or ['system'] if your host supports SystemJS
-      fileName: 'remoteEntry'
-    }
+    target: 'esnext',
+    cssCodeSplit: false,
   }
 })
