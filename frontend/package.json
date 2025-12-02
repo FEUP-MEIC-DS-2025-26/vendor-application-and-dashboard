@@ -7,7 +7,8 @@
     "build": "rsbuild build",
     "preview": "rsbuild preview",
     "test": "vitest run",
-    "test:ui": "vitest"
+    "test:ui": "vitest",
+    "lint": "eslint 'src/**/*.{ts,tsx,js,jsx}' --max-warnings=0"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
