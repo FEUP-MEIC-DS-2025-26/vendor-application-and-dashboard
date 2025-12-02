@@ -17,9 +17,6 @@ ENV CI=true
 # Install dependencies and build
 RUN pnpm install --no-frozen-lockfile
 RUN pnpm build
-# Ensure the generated HTML that includes CSS/script tags is used as index
-# rsbuild outputs `main.html` containing the injected <link> and <script> tags;
-# copy it to `index.html` so static servers serve the fully wired page.
-RUN cp -f dist/main.html dist/index.html || true
+RUN cp -f dist/main.html || true
 
 CMD ["serve", "-s", "dist", "-l", "80", "--single", "--cors"]

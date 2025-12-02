@@ -154,9 +154,11 @@ function Dashboard({ navigate }: DashboardProps) {
   // (Key wiring completed above by merging maps)
 
   // Register global hotkeys: r = refresh, n = go to vendor register, h/? = toggle hotkey helpers
+  const VENDOR_REGISTER_URL = "https://microfrontend-host-1054126107932.europe-west1.run.app/vendor/registration";
+
   useGlobalHotkeys({
     onRefresh: loadDashboardData,
-    onRegister: () => navigate("/register"),
+    onRegister: () => { window.location.href = VENDOR_REGISTER_URL; },
     onHelp: () => {
       setShowHotkeys((s) => !s);
     },
@@ -238,7 +240,7 @@ function Dashboard({ navigate }: DashboardProps) {
       <DashboardHeader 
         storeInfo={store_info} 
         stats={stats} 
-        onRegister={() => navigate("/register")}
+        onRegister={() => { window.location.href = VENDOR_REGISTER_URL; }}
         showHotkeys={showHotkeys}
         registerHotkey={'n'}
       />
