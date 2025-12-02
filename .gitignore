@@ -9,4 +9,11 @@ __pycache__/
 env/
 .env
 frontend/test-results/
+
+manifest-*.json
+
+credentials.json
+backend/credentials.json
 mips/
+
+.DS_Store

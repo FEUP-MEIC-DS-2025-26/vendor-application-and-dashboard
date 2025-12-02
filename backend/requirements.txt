@@ -7,3 +7,4 @@ pydantic[email]==2.12.4
 sqlmodel==0.0.14
 psycopg2-binary==2.9.11
 sentry-sdk==2.8.0
+google-cloud-pubsub
