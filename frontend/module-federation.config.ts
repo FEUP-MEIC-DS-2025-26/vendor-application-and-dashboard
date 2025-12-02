@@ -2,6 +2,7 @@ import { createModuleFederationConfig } from "@module-federation/rsbuild-plugin"
 
 export default createModuleFederationConfig({
   name: "mips_vendor",
+  filename: "remoteEntry.js",
   exposes: {
     "./VendorRegister": "./src/pages/VendorRegister.tsx",
     "./Dashboard": "./src/pages/Dashboard.tsx",
