@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import * as Sentry from "@sentry/react";
 import { dashboardAPI } from "../services/dashboardAPI";
 import { DashboardData } from "../types/dashboard";

@@ -1,14 +1,35 @@
-FROM node:20-alpine AS build
-WORKDIR /app
-COPY package.json package-lock.json ./
-RUN npm install
-COPY . ./
-ARG VITE_API_URL
-ENV VITE_API_URL=${VITE_API_URL}
-RUN npm run build
+# mips_example_page/Dockerfile
+FROM node:25-alpine3.21 AS builder
 
-FROM nginx:alpine
-COPY --from=build /app/dist /usr/share/nginx/html
+# Install pnpm
+RUN npm install -g pnpm
+
+# Set workdir
+WORKDIR /app
+
+# Copy pnpm files
+COPY package.json pnpm-lock.yaml ./
+
+# Install dependencies
+RUN pnpm install --frozen-lockfile
+
+# Copy source code
+COPY . .
+
+# Build the app
+RUN pnpm build
+
+# --- Production image ---
+FROM nginx:1.25-alpine
+
+# Copy built app to nginx html dir
+COPY --from=builder /app/dist /usr/share/nginx/html
+
+# Copy custom nginx config
 COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# Expose port 80
 EXPOSE 80
+
+# Start nginx
 CMD ["nginx", "-g", "daemon off;"]
