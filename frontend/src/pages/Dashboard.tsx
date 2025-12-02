@@ -8,6 +8,7 @@ import DashboardHeader from "../components/DashboardHeader";
 import QuickActions from "../components/QuickActions";
 import RecentOrders from "../components/RecentOrders";
 import ManagementGrid from "../components/ManagementGrid";
+import SalesChart from "../components/SalesChart";
 import useGlobalHotkeys from "../hooks/useGlobalHotkeys";
 import { ADD_PRODUCT_PAGE_URL, SALES_ANALYTICS_PAGE_URL } from "../config";
 
@@ -246,15 +247,20 @@ function Dashboard({ navigate }: DashboardProps) {
       />
 
       <main className="dashboard-main">
-  <QuickActions actions={quick_actions} hotkeys={hotkeys} showHotkeys={showHotkeys} onAction={handleQuickAction} />
-        
+        <QuickActions actions={quick_actions} hotkeys={hotkeys} showHotkeys={showHotkeys} onAction={handleQuickAction} />
+
+        {/* Sales Chart Section */}
+        {dashboardData.sales_chart && dashboardData.sales_chart.length > 0 && (
+          <SalesChart data={dashboardData.sales_chart} currency={store_info.currency} />
+        )}
+
         {recent_orders.length > 0 && (
           <RecentOrders 
             orders={recent_orders} 
             currency={store_info.currency} 
           />
         )}
-        
+
         <ManagementGrid 
           stats={stats} 
           onAction={handleManagementAction} 
