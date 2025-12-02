@@ -14,3 +14,6 @@ manifest-*.json
 
 credentials.json
 backend/credentials.json
+mips/
+
+.DS_Store

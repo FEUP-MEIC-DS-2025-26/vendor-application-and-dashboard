@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import * as Sentry from "@sentry/react";
 import { dashboardAPI } from "../services/dashboardAPI";
 import { DashboardData } from "../types/dashboard";
@@ -8,6 +8,9 @@ import DashboardHeader from "../components/DashboardHeader";
 import QuickActions from "../components/QuickActions";
 import RecentOrders from "../components/RecentOrders";
 import ManagementGrid from "../components/ManagementGrid";
+import SalesChart from "../components/SalesChart";
+import useGlobalHotkeys from "../hooks/useGlobalHotkeys";
+import { ADD_PRODUCT_PAGE_URL, SALES_ANALYTICS_PAGE_URL } from "../config";
 
 interface DashboardProps {
   navigate: (to: string) => void;
@@ -17,12 +20,9 @@ function Dashboard({ navigate }: DashboardProps) {
   const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [showHotkeys, setShowHotkeys] = useState<boolean>(false);
 
-  useEffect(() => {
-    loadDashboardData();
-  }, []);
-
-  const loadDashboardData = async () => {
+  const loadDashboardData = useCallback(async () => {
     setLoading(true);
     setError(null);
     
@@ -60,7 +60,111 @@ function Dashboard({ navigate }: DashboardProps) {
     } finally {
       setLoading(false);
     }
+  }, []);
+
+  useEffect(() => {
+    loadDashboardData();
+  }, [loadDashboardData]);
+
+  // Handler for quick actions (memoized so it can be used by the hotkey hook)
+  const handleQuickAction = useCallback(
+    (actionId: string) => {
+      switch (actionId) {
+        case "add_product":
+          window.open(ADD_PRODUCT_PAGE_URL, "_self", "noopener");
+          break;
+        case "view_orders":
+          navigate("/orders");
+          break;
+        // Support both 'inventory' and 'view_inventory' ids (backend/front mock differences)
+        case "view_inventory":
+        case "inventory":
+          navigate("/inventory");
+          break;
+        // Support both 'analytics' and 'view_analytics'
+        case "view_analytics":
+        case "analytics":
+            window.open(SALES_ANALYTICS_PAGE_URL, "_self", "noopener");
+            break;
+        default:
+          console.log("Quick action triggered:", actionId);
+      }
+    },
+    [navigate]
+  );
+
+  // Use the raw quick actions from the dashboard; components and key wiring
+  // will match either the `id` or the `action` metadata to determine behavior.
+  const quickActionsList = dashboardData?.quick_actions ?? [];
+
+  // Merge quick-action and management key maps into a single canonical map.
+  // We will wire each key to a quick-action handler if the backend exposes
+  // the corresponding action; otherwise we fall back to the management handler.
+  const keyMap: Record<string, string> = {
+    p: "add_product",
+    o: "view_orders",
+    i: "inventory",
+    a: "analytics",
+    c: "catalog",
+    s: "settings",
   };
+
+  const quickActionHandlers: Record<string, () => void> = {};
+  const hotkeys: Record<string, string> = {};
+  const managementHotkeys: Record<string, string> = {};
+
+  for (const [key, actionId] of Object.entries(keyMap)) {
+    // Prefer quick-action if present in the dashboard data (id or action metadata)
+    const found = quickActionsList.find((a) => a.id === actionId || a.action === actionId);
+    if (found) {
+      const handlerId = found.id ?? found.action ?? actionId;
+      quickActionHandlers[key] = () => handleQuickAction(handlerId);
+      hotkeys[found.id || found.action || actionId] = key;
+      continue;
+    }
+
+    // Fallback to management handler
+    quickActionHandlers[key] = () => handleManagementAction(actionId);
+    managementHotkeys[actionId] = key;
+  }
+
+  // management action handler (used by the grid and hotkeys)
+  const handleManagementAction = useCallback(
+    (actionId: string) => {
+      switch (actionId) {
+        case "catalog":
+          // route to inventory/catalog view
+          navigate("/inventory");
+          break;
+        case "view_orders":
+          navigate("/orders");
+          break;
+        case "analytics":
+          window.open(SALES_ANALYTICS_PAGE_URL, "_self", "noopener");
+          break;
+        case "settings":
+          navigate("/settings");
+          break;
+        default:
+          console.log("Management action:", actionId);
+      }
+    },
+    [navigate]
+  );
+
+  // (Key wiring completed above by merging maps)
+
+  // Register global hotkeys: r = refresh, n = go to vendor register, h/? = toggle hotkey helpers
+  const VENDOR_REGISTER_URL = "https://microfrontend-host-1054126107932.europe-west1.run.app/vendor/registration";
+
+  useGlobalHotkeys({
+    onRefresh: loadDashboardData,
+    onRegister: () => { window.location.href = VENDOR_REGISTER_URL; },
+    onHelp: () => {
+      setShowHotkeys((s) => !s);
+    },
+    quickActionHandlers,
+  });
 
   // --- Sentry Test Functions (Commented out - only for testing) ---
   // const testSentryError = () => {
@@ -137,20 +241,32 @@ function Dashboard({ navigate }: DashboardProps) {
       <DashboardHeader 
         storeInfo={store_info} 
         stats={stats} 
-        onRegister={() => navigate("/register")}
+        onRegister={() => { window.location.href = VENDOR_REGISTER_URL; }}
+        showHotkeys={showHotkeys}
+        registerHotkey={'n'}
       />
 
       <main className="dashboard-main">
-        <QuickActions actions={quick_actions} />
-        
+        <QuickActions actions={quick_actions} hotkeys={hotkeys} showHotkeys={showHotkeys} onAction={handleQuickAction} />
+
+        {/* Sales Chart Section */}
+        {dashboardData.sales_chart && dashboardData.sales_chart.length > 0 && (
+          <SalesChart data={dashboardData.sales_chart} currency={store_info.currency} />
+        )}
+
         {recent_orders.length > 0 && (
           <RecentOrders 
             orders={recent_orders} 
             currency={store_info.currency} 
           />
         )}
-        
-        <ManagementGrid stats={stats} />
+
+        <ManagementGrid 
+          stats={stats} 
+          onAction={handleManagementAction} 
+          hotkeys={managementHotkeys} 
+          showHotkeys={showHotkeys}
+        />
       </main>
 
       <footer>

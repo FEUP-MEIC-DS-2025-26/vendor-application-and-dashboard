@@ -22,17 +22,28 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 8
+
+      - name: Debug pwd
+        run: pwd
+
+      - name: Debug ls
+        run: ls -la
+
       - name: Install frontend dependencies
         working-directory: frontend
-        run: npm ci
+        run: pnpm install
 
       - name: Install ESLint plugins for maintainability
         working-directory: frontend
-        run: npm install --save-dev eslint-plugin-sonarjs eslint-plugin-complexity
+        run: pnpm add -D eslint-plugin-sonarjs eslint-plugin-complexity
 
       - name: Run ESLint with maintainability rules
         working-directory: frontend
-        run: npx eslint src --ext .ts,.tsx --max-warnings=0
+        run: pnpm exec eslint src --ext .ts,.tsx --max-warnings=0
 
       - name: Setup Python
         uses: actions/setup-python@v4
