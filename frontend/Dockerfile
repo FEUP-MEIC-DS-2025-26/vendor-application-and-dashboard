@@ -17,6 +17,9 @@ ENV CI=true
 # Install dependencies and build
 RUN pnpm install --no-frozen-lockfile
 RUN pnpm build
-RUN cp -f dist/main.html || true
+RUN if [ -f dist/main.html ]; then cp -f dist/main.html dist/index.html; fi || true
+
+# Ensure the container clearly exposes port 80
+EXPOSE 80
 
 CMD ["serve", "-s", "dist", "-l", "80", "--single", "--cors"]

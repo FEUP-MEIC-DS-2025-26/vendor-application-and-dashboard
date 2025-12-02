@@ -100,7 +100,7 @@ To build and serve the frontend statically through the backend:
 ```pwsh
 # Build the frontend
 cd frontend
-npm run build
+pnpm run build
 
 # Start the backend (serves static files)
 cd ..\backend
@@ -131,7 +131,7 @@ From the repo root:
 ```bash
 cd frontend
 # install dependencies (if not installed)
-npm ci
+pnpm install
 
 # print eslint version
 npx eslint --version
