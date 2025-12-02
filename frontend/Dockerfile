@@ -9,6 +9,8 @@ COPY . .
 
 # Install pnpm
 RUN npm install -g pnpm
+# Install static server used in CMD
+RUN npm install -g serve
 
 ENV CI=true
 
@@ -16,9 +18,4 @@ ENV CI=true
 RUN pnpm install --no-frozen-lockfile
 RUN pnpm build
 
-# --- Production image ---
-FROM nginx:1.25-alpine
-COPY --from=builder /app/dist /usr/share/nginx/html
-COPY nginx.conf /etc/nginx/nginx.conf
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["serve", "-s", "dist", "-l", "80", "--single", "--cors"]

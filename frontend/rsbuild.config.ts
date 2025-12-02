@@ -11,10 +11,18 @@ export default defineConfig({
       index: '/index.html',
       disableDotRule: true,
     }, // Robust SPA fallback for client-side routing
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
+      'Access-Control-Allow-Headers': 'X-Requested-With, content-type, Authorization',
+    },
   },
   source: {
     entry: {
       main: './src/main.tsx',
     },
+  },
+  output: {
+    assetPrefix: 'auto',
   },
 });
