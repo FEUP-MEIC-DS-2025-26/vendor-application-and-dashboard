@@ -17,7 +17,7 @@ function ManagementGrid({ stats, onAction, hotkeys = {}, showHotkeys = false }: 
           <div className="management-icon" aria-hidden="true">🏺</div>
           <div className="management-content">
             <h3>Product Catalog {showHotkeys && hotkeys['catalog'] && <small className="hotkey">({hotkeys['catalog'].toUpperCase()})</small>}</h3>
-            <p>Manage your entire inventory ({stats.products.active_products} active)</p>
+            <p>Manage your entire inventory</p>
           </div>
         </button>
         <button className="management-card" onClick={() => (onAction ? onAction('view_orders') : console.log('Orders'))}>
