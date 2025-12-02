@@ -76,8 +76,14 @@ jobs:
     - name: 4. Check pnpm version
       run: pnpm --version
 
+    - name: Debug pwd
+      run: pwd
+
+    - name: Debug ls
+      run: ls -la
+
     - name: 5. Install dependencies
-      run: pnpm install --frozen-lockfile
+      run: pnpm install
 
     - name: 6. Run PNPM Audit (Dependency Scan)
       run: pnpm audit --audit-level=moderate
