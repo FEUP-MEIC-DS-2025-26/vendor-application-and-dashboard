@@ -1,12 +1,30 @@
 
+from app.services import dashboard_service
 from fastapi import APIRouter, HTTPException, status
 import logging
 from app.models.vendor import VendorRequestCreate
 
 logger = logging.getLogger(__name__)
 
-router = APIRouter(prefix="/api/vendors", tags=["Vendor Registration"])
+router = APIRouter(prefix="/api/vendor", tags=["Vendor Registration"])
 
+# Dashboard endpoint - single call to get all dashboard data
+@router.get("/dashboard")
+async def get_dashboard_data(period: str = "daily"):
+    """
+    Get all dashboard data in a single optimized call.
+    Accepts 'period' query param: 'daily', 'weekly', 'monthly'.
+    """
+    try:
+        dashboard_data = await dashboard_service.get_dashboard_data(period)
+        return dashboard_data
+    except Exception as e:
+        logger.error(f"Dashboard endpoint failed: {str(e)}")
+        # Return error response - let frontend handle fallbacks
+        raise HTTPException(
+            status_code=503, 
+            detail=f"Unable to connect to Jumpseller API: {str(e)}"
+        )
 
 @router.post("/register", status_code=status.HTTP_201_CREATED)
 async def register_vendor(vendor_data: VendorRequestCreate):

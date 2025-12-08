@@ -116,7 +116,8 @@ uvicorn app.main:app --host 0.0.0.0 --port 8000
 - **Styling**: Single CSS file with CSS custom properties for theming
 
 ### API Endpoints
-- `GET /api/dashboard` - Retrieve complete dashboard data
+- `GET /api/vendor/dashboard` - Retrieve complete dashboard data
+- `POST /api/vendor/register` - Register a new vendor
 - `GET /health` - Backend health check
 - `GET /api/jumpseller/health` - Jumpseller API connectivity check
 

@@ -36,15 +36,15 @@ app.add_middleware(ProxyHeadersMiddleware, trusted_hosts=["*"])
 # -----------------------------------------------
 
 # Configure CORS for frontend integration
-cors_origins = ["http://localhost:5173", "http://localhost:3000", "*"]
+cors_origins = ["http://localhost:5173", "http://localhost:3000", "http://localhost:3003", "*"]
 frontend_url = getattr(app_settings, "frontend_url", None)
 if frontend_url:
     cors_origins.append(frontend_url)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=cors_origins, # Agora inclui "*"
-    allow_credentials=True,
+    allow_origins=cors_origins,
+    allow_credentials=False,  # Changed to False since we're allowing "*"
     allow_methods=["*"],
     allow_headers=["*"],
 )

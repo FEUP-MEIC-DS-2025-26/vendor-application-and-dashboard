@@ -10,7 +10,7 @@ class DashboardAPI {
     try {
       console.log(`🔍 Fetching dashboard data (${period})...`);
       // Pass the period as a query parameter
-      const { data } = await api.get<DashboardData>("/dashboard", {
+      const { data } = await api.get<DashboardData>("/vendor/dashboard", {
         params: { period }
       });
 
@@ -49,7 +49,7 @@ class DashboardAPI {
   ): Promise<{ success: boolean; data?: unknown; error?: string }> {
     try {
       console.log("📝 Submitting vendor registration...");
-      const { data } = await api.post("/vendors/register", vendorData);
+      const { data } = await api.post("/vendor/register", vendorData);
       console.log("✅ Vendor registration successful:", data);
       return { success: true, data };
     } catch (error: unknown) {

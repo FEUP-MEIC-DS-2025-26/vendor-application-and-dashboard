@@ -2,7 +2,7 @@ import requests
 
 def test_vendor_registration():
     """Acceptance test for vendor registration endpoint."""
-    url = "http://localhost:8000/api/vendors/register"
+    url = "http://localhost:8000/api/vendor/register"
     payload = {
         "name": "Test Vendor",
         "owner_name": "Test Owner",
