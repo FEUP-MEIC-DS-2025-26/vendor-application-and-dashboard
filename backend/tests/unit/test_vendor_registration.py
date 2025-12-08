@@ -14,7 +14,7 @@ def test_register_vendor_validation():
         "email": "test@example.com",
         "questions": []
     }
-    response = client.post("/api/vendors/register", json=payload)
+    response = client.post("/api/vendor/register", json=payload)
     assert response.status_code == 422 or response.status_code == 400
 
 def test_register_vendor_success(monkeypatch):
@@ -34,6 +34,6 @@ def test_register_vendor_success(monkeypatch):
             {"question_id": "1", "question_text": "Q1", "answer": "A valid answer"}
         ]
     }
-    response = client.post("/api/vendors/register", json=payload)
+    response = client.post("/api/vendor/register", json=payload)
     assert response.status_code in (200, 201)
     assert "message" in response.json()

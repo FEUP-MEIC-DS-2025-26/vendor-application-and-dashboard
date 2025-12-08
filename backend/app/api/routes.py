@@ -1,30 +1,9 @@
-from fastapi import APIRouter, HTTPException
-from app.services.dashboard_service import dashboard_service
+from fastapi import APIRouter
 import logging
 
 logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/api", tags=["Vendor API"])
-
-
-# Dashboard endpoint - single call to get all dashboard data
-@router.get("/dashboard")
-async def get_dashboard_data(period: str = "daily"):
-    """
-    Get all dashboard data in a single optimized call.
-    Accepts 'period' query param: 'daily', 'weekly', 'monthly'.
-    """
-    try:
-        dashboard_data = await dashboard_service.get_dashboard_data(period)
-        return dashboard_data
-    except Exception as e:
-        logger.error(f"Dashboard endpoint failed: {str(e)}")
-        # Return error response - let frontend handle fallbacks
-        raise HTTPException(
-            status_code=503, 
-            detail=f"Unable to connect to Jumpseller API: {str(e)}"
-        )
-
 
 # Basic health check
 @router.get("/health")
