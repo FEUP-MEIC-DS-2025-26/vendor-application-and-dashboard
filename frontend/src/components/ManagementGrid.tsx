@@ -7,7 +7,7 @@ interface ManagementGridProps {
   showHotkeys?: boolean;
 }
 
-function ManagementGrid({ stats, onAction, hotkeys = {}, showHotkeys = false }: ManagementGridProps) {
+function ManagementGrid({ onAction, hotkeys = {}, showHotkeys = false }: ManagementGridProps) {
   return (
     <section className="dashboard-section">
       <h2 className="section-title">Manage Your Shop</h2>
