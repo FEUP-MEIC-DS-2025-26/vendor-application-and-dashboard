@@ -23,6 +23,6 @@ export default defineConfig({
     },
   },
   output: {
-    assetPrefix: '/',
+    assetPrefix: 'auto',
   },
 });
