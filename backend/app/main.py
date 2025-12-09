@@ -6,7 +6,6 @@ from uvicorn.middleware.proxy_headers import ProxyHeadersMiddleware
 from app.api.routes import router as jumpseller_router
 from app.core.config import settings
 from app.api.vendors import router as vendors_router
-from app.core.config import settings as app_settings
 import pathlib
 import logging
 import sentry_sdk
