@@ -19,11 +19,7 @@ import {
   ANALYTICS_PATH
 } from "../config";
 
-interface DashboardProps {
-  navigate: (to: string) => void;
-}
-
-function Dashboard({ navigate }: DashboardProps) {
+function Dashboard() {
   const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
