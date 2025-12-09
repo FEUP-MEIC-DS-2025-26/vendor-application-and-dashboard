@@ -34,7 +34,7 @@ def _initialize_pubsub():
         topic_id = settings.gcp_pubsub_topic
 
         if not project_id or not topic_id:
-            logger.warning("⚠️ GCP Project ID or Topic ID missing in .env")
+            logger.warning("GCP Project ID or Topic ID missing in .env")
             return
 
         # 4. Criar Cliente
@@ -51,21 +51,37 @@ def _initialize_pubsub():
 _initialize_pubsub()
 
 def publish_vendor_registration(data: dict):
-    """Publica dados no tópico configurado."""
+    """
+    Publica dados de registo de vendedor no tópico configurado.
+    Envia duas mensagens:
+    1. Mensagem de alerta: "New seller registration!"
+    2. Dados do vendedor em JSON
+    """
     if not publisher or not topic_path:
         logger.error("Cannot publish: Pub/Sub not configured.")
         return None
 
     try:
+        # 1. Enviar mensagem de alerta
+        alert_message = "New seller registration!"
+        alert_bytes = alert_message.encode("utf-8")
+        
+        future_alert = publisher.publish(topic_path, alert_bytes)
+        alert_message_id = future_alert.result()
+        
+        logger.info(f"Alert message published! ID: {alert_message_id}")
+        
+        # 2. Enviar dados do vendedor
         message_json = json.dumps(data)
         message_bytes = message_json.encode("utf-8")
         
-        future = publisher.publish(topic_path, message_bytes)
-        message_id = future.result()
+        future_data = publisher.publish(topic_path, message_bytes)
+        data_message_id = future_data.result()
         
-        logger.info(f"Message published! ID: {message_id}")
-        return message_id
+        logger.info(f"Vendor data published! ID: {data_message_id}")
+        
+        return {"alert_id": alert_message_id, "data_id": data_message_id}
             
     except Exception as e:
-        logger.error(f"Failed to publish message: {e}")
+        logger.error(f"Failed to publish messages: {e}")
         raise e
