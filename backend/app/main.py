@@ -6,7 +6,6 @@ from uvicorn.middleware.proxy_headers import ProxyHeadersMiddleware
 from app.api.routes import router as jumpseller_router
 from app.core.config import settings
 from app.api.vendors import router as vendors_router
-from app.core.config import settings as app_settings
 import pathlib
 import logging
 import sentry_sdk
@@ -35,18 +34,13 @@ app = FastAPI(title=settings.app_name, debug=settings.debug)
 app.add_middleware(ProxyHeadersMiddleware, trusted_hosts=["*"])
 # -----------------------------------------------
 
-# Configure CORS for frontend integration
-cors_origins = ["http://localhost:5173", "http://localhost:3000", "http://localhost:3003", "*"]
-frontend_url = getattr(app_settings, "frontend_url", None)
-if frontend_url:
-    cors_origins.append(frontend_url)
-
+# Configure CORS for frontend integration - allow all origins since we're behind a gateway
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=cors_origins,
-    allow_credentials=False,  # Changed to False since we're allowing "*"
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_origins=["*"],
+    allow_credentials=False,
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_headers=["Content-Type", "Authorization", "X-Requested-With"],
 )
 
 # Include Jumpseller API routes
