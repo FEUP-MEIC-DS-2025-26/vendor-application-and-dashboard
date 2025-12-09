@@ -1,5 +1,5 @@
 
-from app.services import dashboard_service
+from app.services.dashboard_service import DashboardService
 from fastapi import APIRouter, HTTPException, status
 import logging
 from app.models.vendor import VendorRequestCreate
@@ -7,6 +7,9 @@ from app.models.vendor import VendorRequestCreate
 logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/api/vendor", tags=["Vendor Registration"])
+
+# Create a single instance of the dashboard service
+dashboard_service = DashboardService()
 
 # Dashboard endpoint - single call to get all dashboard data
 @router.get("/dashboard")
