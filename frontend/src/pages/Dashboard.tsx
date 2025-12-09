@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import * as Sentry from "@sentry/react";
+import "../styles/styles.css";
 import { dashboardAPI } from "../services/dashboardAPI";
 import { DashboardData } from "../types/dashboard";
 import LoadingScreen from "../components/LoadingScreen";
