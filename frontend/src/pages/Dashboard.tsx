@@ -10,7 +10,14 @@ import RecentOrders from "../components/RecentOrders";
 import ManagementGrid from "../components/ManagementGrid";
 import SalesChart from "../components/SalesChart";
 import useGlobalHotkeys from "../hooks/useGlobalHotkeys";
-import { ADD_PRODUCT_PAGE_URL, SALES_ANALYTICS_PAGE_URL } from "../config";
+import {
+  VENDOR_REGISTER_PATH,
+  ORDERS_PATH,
+  INVENTORY_PATH,
+  SETTINGS_PATH,
+  ADD_PRODUCT_PATH,
+  ANALYTICS_PATH
+} from "../config";
 
 interface DashboardProps {
   navigate: (to: string) => void;
@@ -71,26 +78,26 @@ function Dashboard({ navigate }: DashboardProps) {
     (actionId: string) => {
       switch (actionId) {
         case "add_product":
-          window.open(ADD_PRODUCT_PAGE_URL, "_self", "noopener");
+          window.location.href = ADD_PRODUCT_PATH;
           break;
         case "view_orders":
-          navigate("/orders");
+          window.location.href = ORDERS_PATH;
           break;
         // Support both 'inventory' and 'view_inventory' ids (backend/front mock differences)
         case "view_inventory":
         case "inventory":
-          navigate("/inventory");
+          window.location.href = INVENTORY_PATH;
           break;
         // Support both 'analytics' and 'view_analytics'
         case "view_analytics":
         case "analytics":
-            window.open(SALES_ANALYTICS_PAGE_URL, "_self", "noopener");
+            window.location.href = ANALYTICS_PATH;
             break;
         default:
           console.log("Quick action triggered:", actionId);
       }
     },
-    [navigate]
+    []
   );
 
   // Use the raw quick actions from the dashboard; components and key wiring
@@ -134,32 +141,30 @@ function Dashboard({ navigate }: DashboardProps) {
       switch (actionId) {
         case "catalog":
           // route to inventory/catalog view
-          navigate("/inventory");
+          window.location.href = INVENTORY_PATH;
           break;
         case "view_orders":
-          navigate("/orders");
+          window.location.href = ORDERS_PATH;
           break;
         case "analytics":
-          window.open(SALES_ANALYTICS_PAGE_URL, "_self", "noopener");
+          window.location.href = ANALYTICS_PATH;
           break;
         case "settings":
-          navigate("/settings");
+          window.location.href = SETTINGS_PATH;
           break;
         default:
           console.log("Management action:", actionId);
       }
     },
-    [navigate]
+    []
   );
 
   // (Key wiring completed above by merging maps)
 
   // Register global hotkeys: r = refresh, n = go to vendor register, h/? = toggle hotkey helpers
-  const VENDOR_REGISTER_URL = "/vendor/registration";
-
   useGlobalHotkeys({
     onRefresh: loadDashboardData,
-    onRegister: () => { window.location.href = VENDOR_REGISTER_URL; },
+    onRegister: () => { window.location.href = VENDOR_REGISTER_PATH; },
     onHelp: () => {
       setShowHotkeys((s) => !s);
     },
@@ -241,7 +246,7 @@ function Dashboard({ navigate }: DashboardProps) {
       <DashboardHeader 
         storeInfo={store_info} 
         stats={stats} 
-        onRegister={() => { window.location.href = VENDOR_REGISTER_URL; }}
+        onRegister={() => { window.location.href = VENDOR_REGISTER_PATH; }}
         showHotkeys={showHotkeys}
         registerHotkey={'n'}
       />
