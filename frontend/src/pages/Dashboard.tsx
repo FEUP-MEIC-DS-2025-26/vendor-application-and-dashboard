@@ -67,7 +67,7 @@ function Dashboard() {
     (actionId: string) => {
       switch (actionId) {
         case "add_product":
-          window.location.href = ADD_PRODUCT_PATH;
+          window.location.href = ADD_PRODUCT_PAGE_URL;
           break;
         case "view_orders":
           window.open(ORDERS_PAGE_URL, "_self", "noopener");
@@ -80,7 +80,7 @@ function Dashboard() {
         // Support both 'analytics' and 'view_analytics'
         case "view_analytics":
         case "analytics":
-            window.location.href = ANALYTICS_PATH;
+            window.location.href = SALES_ANALYTICS_PAGE_URL;
             break;
         default:
           console.log("Quick action triggered:", actionId);
@@ -136,10 +136,10 @@ function Dashboard() {
           window.open(ORDERS_PAGE_URL, "_self", "noopener");
           break;
         case "analytics":
-          window.location.href = ANALYTICS_PATH;
+          window.location.href = SALES_ANALYTICS_PAGE_URL;
           break;
         case "settings":
-          window.location.href = SETTINGS_PATH;
+          console.log("Settings action - not yet implemented");
           break;
         default:
           console.log("Management action:", actionId);
