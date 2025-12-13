@@ -12,14 +12,6 @@ export interface DashboardStats {
   };
 }
 
-export interface RecentOrder {
-  id: number;
-  customer: string;
-  total: number;
-  status: string;
-  date: string;
-  items_count: number;
-}
 
 export interface QuickAction {
   id: string;
@@ -44,7 +36,6 @@ export interface DashboardData {
     timezone?: string;
   };
   stats: DashboardStats;
-  recent_orders: RecentOrder[];
   // NEW: Array of sales data points
   sales_chart: SalesDataPoint[];
   quick_actions: QuickAction[];

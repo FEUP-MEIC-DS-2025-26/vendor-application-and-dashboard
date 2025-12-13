@@ -7,7 +7,6 @@ import LoadingScreen from "../components/LoadingScreen";
 import ErrorScreen from "../components/ErrorScreen";
 import DashboardHeader from "../components/DashboardHeader";
 import QuickActions from "../components/QuickActions";
-import RecentOrders from "../components/RecentOrders";
 import ManagementGrid from "../components/ManagementGrid";
 import SalesChart from "../components/SalesChart";
 import useGlobalHotkeys from "../hooks/useGlobalHotkeys";
@@ -192,7 +191,7 @@ function Dashboard({ navigate }: DashboardProps) {
     return <ErrorScreen error={dashboardData.error} onRetry={loadDashboardData} />;
   }
 
-  const { store_info, stats, recent_orders, quick_actions } = dashboardData;
+  const { store_info, stats, quick_actions } = dashboardData;
   console.log('Dashboard Data:', dashboardData);
 
   return (
@@ -255,12 +254,6 @@ function Dashboard({ navigate }: DashboardProps) {
           <SalesChart data={dashboardData.sales_chart} currency={store_info.currency} />
         )}
 
-        {recent_orders.length > 0 && (
-          <RecentOrders 
-            orders={recent_orders} 
-            currency={store_info.currency} 
-          />
-        )}
 
         <ManagementGrid 
           stats={stats} 
