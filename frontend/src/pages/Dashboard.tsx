@@ -10,7 +10,7 @@ import QuickActions from "../components/QuickActions";
 import ManagementGrid from "../components/ManagementGrid";
 import SalesChart from "../components/SalesChart";
 import useGlobalHotkeys from "../hooks/useGlobalHotkeys";
-import { ADD_PRODUCT_PAGE_URL, SALES_ANALYTICS_PAGE_URL } from "../config";
+import { ADD_PRODUCT_PAGE_URL, SALES_ANALYTICS_PAGE_URL, ORDERS_PAGE_URL, PRODUCTS_PAGE_URL } from "../config";
 
 interface DashboardProps {
   navigate: (to: string) => void;
@@ -74,12 +74,12 @@ function Dashboard({ navigate }: DashboardProps) {
           window.open(ADD_PRODUCT_PAGE_URL, "_self", "noopener");
           break;
         case "view_orders":
-          navigate("/orders");
+          window.open(ORDERS_PAGE_URL, "_self", "noopener");
           break;
         // Support both 'inventory' and 'view_inventory' ids (backend/front mock differences)
         case "view_inventory":
         case "inventory":
-          navigate("/inventory");
+          window.open(PRODUCTS_PAGE_URL, "_self", "noopener");
           break;
         // Support both 'analytics' and 'view_analytics'
         case "view_analytics":
@@ -133,11 +133,11 @@ function Dashboard({ navigate }: DashboardProps) {
     (actionId: string) => {
       switch (actionId) {
         case "catalog":
-          // route to inventory/catalog view
-          navigate("/inventory");
+          // route to products catalog view
+          window.open(PRODUCTS_PAGE_URL, "_self", "noopener");
           break;
         case "view_orders":
-          navigate("/orders");
+          window.open(ORDERS_PAGE_URL, "_self", "noopener");
           break;
         case "analytics":
           window.open(SALES_ANALYTICS_PAGE_URL, "_self", "noopener");
@@ -154,12 +154,9 @@ function Dashboard({ navigate }: DashboardProps) {
 
   // (Key wiring completed above by merging maps)
 
-  // Register global hotkeys: r = refresh, n = go to vendor register, h/? = toggle hotkey helpers
-  const VENDOR_REGISTER_URL = "https://microfrontend-host-1054126107932.europe-west1.run.app/vendor/registration";
-
+  // Register global hotkeys: r = refresh, h/? = toggle hotkey helpers
   useGlobalHotkeys({
     onRefresh: loadDashboardData,
-    onRegister: () => { window.location.href = VENDOR_REGISTER_URL; },
     onHelp: () => {
       setShowHotkeys((s) => !s);
     },
@@ -241,9 +238,7 @@ function Dashboard({ navigate }: DashboardProps) {
       <DashboardHeader 
         storeInfo={store_info} 
         stats={stats} 
-        onRegister={() => { window.location.href = VENDOR_REGISTER_URL; }}
         showHotkeys={showHotkeys}
-        registerHotkey={'n'}
       />
 
       <main className="dashboard-main">

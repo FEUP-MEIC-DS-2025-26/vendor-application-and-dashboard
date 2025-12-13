@@ -33,7 +33,6 @@ body {
   margin: 0;
   padding: 40px 48px;
   min-height: 100vh;
-  background: url('./fundo.png') center/cover no-repeat fixed;
 }
 
 /* ===== Common Card Styles ===== */
@@ -305,6 +304,7 @@ header h1,
   padding: 48px;
   margin: 40px;
   box-shadow: var(--shadow);
+  color: #2d3748;
 }
 
 .loading-spinner {
@@ -379,6 +379,7 @@ header h1,
   align-items: center;
   justify-content: space-between;
   gap: 20px;
+  color: #2d3748;
 }
 
 .retry-btn,
@@ -462,6 +463,7 @@ header h1,
   background: rgba(255, 255, 255, 0.95);
   transition: var(--transition);
   margin-top: 4px;
+  color: #2d3748;
 }
 
 .register-input:focus,
@@ -470,6 +472,7 @@ header h1,
   box-shadow: 0 0 0 3px rgba(139, 90, 60, 0.08);
   background: #fff;
   outline: none;
+  color: #2d3748;
 }
 
 .register-textarea {
@@ -501,6 +504,7 @@ header h1,
   max-width: 600px;
   margin: 50px auto;
   text-align: center;
+  color: #2d3748;
 }
 
 .register-success .register-card {
@@ -560,6 +564,7 @@ kbd {
   font-family: ui-monospace, monospace;
   font-size: 0.85em;
   border: 1px solid rgba(0, 0, 0, 0.06);
+  color: #2d3748;
 }
 
 /* ===== Responsive Design ===== */
