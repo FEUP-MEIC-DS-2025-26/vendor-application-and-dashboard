@@ -12,11 +12,7 @@ import SalesChart from "../components/SalesChart";
 import useGlobalHotkeys from "../hooks/useGlobalHotkeys";
 import { ADD_PRODUCT_PAGE_URL, SALES_ANALYTICS_PAGE_URL, ORDERS_PAGE_URL, PRODUCTS_PAGE_URL } from "../config";
 
-interface DashboardProps {
-  navigate: (to: string) => void;
-}
-
-function Dashboard({ navigate }: DashboardProps) {
+function Dashboard() {
   const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -71,7 +67,7 @@ function Dashboard({ navigate }: DashboardProps) {
     (actionId: string) => {
       switch (actionId) {
         case "add_product":
-          window.open(ADD_PRODUCT_PAGE_URL, "_self", "noopener");
+          window.location.href = ADD_PRODUCT_PATH;
           break;
         case "view_orders":
           window.open(ORDERS_PAGE_URL, "_self", "noopener");
@@ -84,13 +80,13 @@ function Dashboard({ navigate }: DashboardProps) {
         // Support both 'analytics' and 'view_analytics'
         case "view_analytics":
         case "analytics":
-            window.open(SALES_ANALYTICS_PAGE_URL, "_self", "noopener");
+            window.location.href = ANALYTICS_PATH;
             break;
         default:
           console.log("Quick action triggered:", actionId);
       }
     },
-    [navigate]
+    []
   );
 
   // Use the raw quick actions from the dashboard; components and key wiring
@@ -140,16 +136,16 @@ function Dashboard({ navigate }: DashboardProps) {
           window.open(ORDERS_PAGE_URL, "_self", "noopener");
           break;
         case "analytics":
-          window.open(SALES_ANALYTICS_PAGE_URL, "_self", "noopener");
+          window.location.href = ANALYTICS_PATH;
           break;
         case "settings":
-          navigate("/settings");
+          window.location.href = SETTINGS_PATH;
           break;
         default:
           console.log("Management action:", actionId);
       }
     },
-    [navigate]
+    []
   );
 
   // (Key wiring completed above by merging maps)

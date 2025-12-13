@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import "./App.css";
 import * as Sentry from "@sentry/react";
 import Dashboard from "./pages/Dashboard";
@@ -15,7 +15,7 @@ const App = () => {
           <button onClick={() => setView("register")} style={{ marginLeft: 8 }}>Show Register</button>
         </div>
         {view === "dashboard" ? (
-          <Dashboard navigate={() => {}} />
+          <Dashboard />
         ) : (
           <VendorRegister onSuccess={() => setView("dashboard")}
                          onCancel={() => setView("dashboard")} />
