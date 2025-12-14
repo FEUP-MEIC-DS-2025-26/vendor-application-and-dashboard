@@ -30,15 +30,16 @@ export function applyTheme(theme: Theme = 'auto'): void {
  * The host can dispatch a custom event to change the theme
  */
 export function listenForThemeChanges(): () => void {
-  const handleThemeChange = (event: CustomEvent<{ theme: Theme }>) => {
-    applyTheme(event.detail.theme);
+  const handleThemeChange = (event: Event) => {
+    const customEvent = event as CustomEvent<{ theme: Theme }>;
+    applyTheme(customEvent.detail.theme);
   };
 
-  window.addEventListener('mips-theme-change' as any, handleThemeChange as EventListener);
+  window.addEventListener('mips-theme-change', handleThemeChange);
 
   // Return cleanup function
   return () => {
-    window.removeEventListener('mips-theme-change' as any, handleThemeChange as EventListener);
+    window.removeEventListener('mips-theme-change', handleThemeChange);
   };
 }
 
