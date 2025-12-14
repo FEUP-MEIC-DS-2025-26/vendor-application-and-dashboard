@@ -1,5 +1,5 @@
 import { QuickAction } from "../types/dashboard";
-import { ADD_PRODUCT_PAGE_URL, SALES_ANALYTICS_PAGE_URL } from "../config";
+import { ADD_PRODUCT_PAGE_URL } from "../config";
 
 interface QuickActionsProps {
   actions: QuickAction[];
@@ -50,45 +50,6 @@ function QuickActions({ actions, hotkeys = {}, showHotkeys = false, onAction }: 
                 <div className="action-content">
                   <h3>
                     Suggest a product {showHotkeys && hotkeys[action.id] && <small className="hotkey">({hotkeys[action.id].toUpperCase()})</small>}
-                  </h3>
-                  <p>{action.description}</p>
-                </div>
-              </a>
-            );
-          }
-
-          if ((action.id === "view_analytics") || action.action === "view_analytics" || action.action === "analytics") {
-            if (onAction) {
-              return (
-                <button
-                  key={action.id}
-                  className="action-card"
-                  onClick={() => onAction(action.id)}
-                >
-                  <div className="action-icon">{action.icon}</div>
-                  <div className="action-content">
-                    <h3>
-                      Sales Analytics {showHotkeys && hotkeys[action.id] && <small className="hotkey">({hotkeys[action.id].toUpperCase()})</small>}
-                    </h3>
-                    <p>{action.description}</p>
-                  </div>
-                </button>
-              );
-            }
-
-            // fallback: preserve original external link behaviour when no handler
-            return (
-              <a
-                key={action.id}
-                className="action-card no-underline"
-                href={SALES_ANALYTICS_PAGE_URL}
-                rel="noopener noreferrer"
-                style={{ textDecoration: "none" }}
-              >
-                <div className="action-icon">{action.icon}</div>
-                <div className="action-content">
-                  <h3>
-                    Sales Analytics {showHotkeys && hotkeys[action.id] && <small className="hotkey">({hotkeys[action.id].toUpperCase()})</small>}
                   </h3>
                   <p>{action.description}</p>
                 </div>

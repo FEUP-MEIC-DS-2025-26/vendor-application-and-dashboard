@@ -28,19 +28,19 @@ function ManagementGrid({ onAction, hotkeys = {}, showHotkeys = false }: Managem
           </div>
         </button>
 
-        <button className="management-card" onClick={() => {console.log('Analytics'); window.open('https://performance-table-133525542893.us-central1.run.app/search/1', '_blank'); }}>
-          <div className="management-icon" aria-hidden="true">📊</div>
+        <button className="management-card" onClick={() => (onAction ? onAction('leaderboard') : console.log('Leaderboard'))}>
+          <div className="management-icon" aria-hidden="true">🏆</div>
           <div className="management-content">
-            <h3>Analytics {showHotkeys && hotkeys['analytics'] && <small className="hotkey">({hotkeys['analytics'].toUpperCase()})</small>}</h3>
-            <p>Track your sales performance</p>
+            <h3>Products Leaderboard {showHotkeys && hotkeys['leaderboard'] && <small className="hotkey">({hotkeys['leaderboard'].toUpperCase()})</small>}</h3>
+            <p>View top performing products</p>
           </div>
         </button>
 
-        <button className="management-card" onClick={() => (onAction ? onAction('settings') : console.log('Settings'))}>
-          <div className="management-icon" aria-hidden="true">⚙️</div>
+        <button className="management-card" onClick={() => (onAction ? onAction('reviews') : console.log('Reviews'))}>
+          <div className="management-icon" aria-hidden="true">⭐</div>
           <div className="management-content">
-            <h3>Shop Settings {showHotkeys && hotkeys['settings'] && <small className="hotkey">({hotkeys['settings'].toUpperCase()})</small>}</h3>
-            <p>Configure your store preferences</p>
+            <h3>Products Reviews {showHotkeys && hotkeys['reviews'] && <small className="hotkey">({hotkeys['reviews'].toUpperCase()})</small>}</h3>
+            <p>Read customer feedback and ratings</p>
           </div>
         </button>
 

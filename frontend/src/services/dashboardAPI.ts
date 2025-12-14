@@ -80,7 +80,6 @@ class DashboardAPI {
         { id: "add_product", title: "Suggest a product", description: "Suggest a new product for the marketplace", icon: "➕", action: "create_product" },
         { id: "view_orders", title: "Manage Orders", description: "View and update order status", icon: "📦", action: "view_orders" },
         { id: "inventory", title: "Check Inventory", description: "Monitor stock levels", icon: "📊", action: "view_inventory" },
-        { id: "analytics", title: "Sales Analytics", description: "View performance metrics", icon: "📈", action: "view_analytics" },
       ],
       sales_chart: [] // Empty chart for fallback
     };
