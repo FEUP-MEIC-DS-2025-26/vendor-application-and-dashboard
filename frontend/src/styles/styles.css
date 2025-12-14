@@ -1,11 +1,23 @@
 /* ===== CSS Variables ===== */
 :root {
-  --bg: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-  --card-bg: rgba(255, 255, 255, 0.95);
+  /* Theme-aware variables (defined below in theme section) */
+  --text-primary: #1a1a1a;
+  --text-secondary: #6b7280;
+  --bg-input: #ffffff;
+  --bg-card: rgba(255, 255, 255, 0.95);
+  --bg-container: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  
+  /* Legacy variables - now reference theme variables */
+  --bg: var(--bg-container);
+  --card-bg: var(--bg-card);
+  
+  /* Accent colors - theme-aware */
   --accent: #8b5a3c;
   --accent-light: #a67c52;
-  --muted: #6b7280;
+  --muted: var(--text-secondary);
   --warm-beige: #f4f1eb;
+  
+  /* Effects */
   --shadow: 0 4px 20px rgba(139, 90, 60, 0.15);
   --shadow-hover: 0 8px 32px rgba(139, 90, 60, 0.2);
   --gradient-accent: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
@@ -22,9 +34,92 @@ body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   background: var(--bg);
   margin: 0;
-  color: #2d3748;
+  color: var(--text-primary);
   line-height: 1.6;
   min-height: 100vh;
+}
+
+/* ===== Theme Support for Light and Dark Modes ===== */
+/* 
+ * These rules provide proper theme integration with the host application.
+ * Colors adapt based on the system/host theme preference.
+ */
+
+/* Light mode (default) */
+:root {
+  --text-primary: #1a1a1a;
+  --text-secondary: #6b7280;
+  --bg-input: #ffffff;
+  --bg-card: rgba(255, 255, 255, 0.95);
+  --bg-container: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  --accent: #8b5a3c;
+  --accent-light: #a67c52;
+}
+
+/* Dark mode - lighter text and accent colors */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --text-primary: #ffffff;
+    --text-secondary: #d1d5db;
+    --bg-input: #2d2d2d;
+    --bg-card: rgba(45, 45, 45, 0.95);
+    --bg-container: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    --accent: #d4a574;
+    --accent-light: #e6c19a;
+  }
+}
+
+/* Allow host to override theme via data attribute */
+[data-theme="light"] {
+  --text-primary: #1a1a1a;
+  --text-secondary: #6b7280;
+  --bg-input: #ffffff;
+  --bg-card: rgba(255, 255, 255, 0.95);
+  --bg-container: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  --accent: #8b5a3c;
+  --accent-light: #a67c52;
+}
+
+[data-theme="dark"] {
+  --text-primary: #ffffff;
+  --text-secondary: #d1d5db;
+  --bg-input: #2d2d2d;
+  --bg-card: rgba(45, 45, 45, 0.95);
+  --bg-container: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+  --accent: #d4a574;
+  --accent-light: #e6c19a;
+}
+
+/* Form inputs - theme-aware colors */
+input:not([class*="Mui"]),
+textarea:not([class*="Mui"]),
+select:not([class*="Mui"]) {
+  color: var(--text-primary);
+  background-color: var(--bg-input);
+  border-color: var(--text-secondary);
+}
+
+input:not([class*="Mui"])::placeholder,
+textarea:not([class*="Mui"])::placeholder {
+  color: var(--text-secondary);
+}
+
+/* Text elements in vendor components - theme-aware */
+[class*="vendor"],
+[class*="Vendor"],
+[class*="action-card"],
+[class*="header-register"],
+[class*="dashboard"] {
+  color: var(--text-primary);
+}
+
+/* Ensure child text elements use theme colors */
+[class*="vendor"] *:not([class*="Mui"]),
+[class*="Vendor"] *:not([class*="Mui"]),
+[class*="action-card"] *:not([class*="Mui"]),
+[class*="header-register"] *:not([class*="Mui"]),
+[class*="dashboard"] *:not([class*="Mui"]) {
+  color: var(--text-primary);
 }
 
 /* ===== Layout ===== */
@@ -304,7 +399,7 @@ header h1,
   padding: 48px;
   margin: 40px;
   box-shadow: var(--shadow);
-  color: #2d3748;
+  color: var(--text-primary);
 }
 
 .loading-spinner {
@@ -357,7 +452,7 @@ header h1,
 }
 
 .error-container h2 {
-  color: #dc2626;
+  color: #ef4444;
   margin: 0 0 16px;
   font-size: 1.8rem;
 }
@@ -369,8 +464,8 @@ header h1,
 }
 
 .error-banner {
-  background: rgba(255, 99, 71, 0.08);
-  border: 1px solid rgba(255, 99, 71, 0.2);
+  background: rgba(255, 99, 71, 0.15);
+  border: 1px solid rgba(255, 99, 71, 0.4);
   border-left: 4px solid #ff6347;
   border-radius: var(--border-radius);
   padding: 20px 24px;
@@ -379,7 +474,18 @@ header h1,
   align-items: center;
   justify-content: space-between;
   gap: 20px;
-  color: #2d3748;
+  color: #dc2626;
+}
+
+/* Dark mode - use white text for error banner */
+@media (prefers-color-scheme: dark) {
+  .error-banner {
+    color: #ffffff;
+  }
+}
+
+[data-theme="dark"] .error-banner {
+  color: #ffffff;
 }
 
 .retry-btn,
@@ -524,7 +630,7 @@ footer {
   margin-top: 48px;
   text-align: center;
   color: var(--muted);
-  background: rgba(255, 255, 255, 0.8);
+  background: var(--bg-card);
   padding: 20px;
   border-radius: 12px;
 }
