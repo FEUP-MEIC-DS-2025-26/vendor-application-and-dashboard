@@ -44,6 +44,8 @@ async def register_vendor(vendor_data: VendorRequestCreate):
 
     # Build simplified payload
     payload = {
+        "name": vendor_data.name,
+        "email": vendor_data.email,
         "about": vendor_data.about,
         "phone": vendor_data.phone,
         "tax_id": vendor_data.tax_id,
@@ -54,6 +56,7 @@ async def register_vendor(vendor_data: VendorRequestCreate):
         "owner_name": vendor_data.owner_name
     }
 
+    print("A ENVIAR PARA O PUBSUB:", payload)  # <--- Adiciona isto para veres no terminal!
 
     # Publish to Google Cloud Pub/Sub instead of direct API call
     from app.clients.pubsub_client import publish_vendor_registration
