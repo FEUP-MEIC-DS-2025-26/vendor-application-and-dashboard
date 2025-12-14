@@ -76,10 +76,6 @@ class DashboardAPI {
         orders: { new_orders: 1, total_orders: 2, monthly_revenue: 135.49, currency: "EUR" },
         products: { total_products: 3, active_products: 3, low_stock_alerts: 1 },
       },
-      recent_orders: [
-        { id: 1, customer: "Jane Smith", total: 89.99, status: "pending", date: "2025-10-26", items_count: 2 },
-        { id: 2, customer: "John Doe", total: 45.5, status: "completed", date: "2025-10-25", items_count: 1 },
-      ],
       quick_actions: [
         { id: "add_product", title: "Suggest a product", description: "Suggest a new product for the marketplace", icon: "➕", action: "create_product" },
         { id: "view_orders", title: "Manage Orders", description: "View and update order status", icon: "📦", action: "view_orders" },

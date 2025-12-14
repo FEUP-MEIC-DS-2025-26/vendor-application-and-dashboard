@@ -7,18 +7,10 @@ import LoadingScreen from "../components/LoadingScreen";
 import ErrorScreen from "../components/ErrorScreen";
 import DashboardHeader from "../components/DashboardHeader";
 import QuickActions from "../components/QuickActions";
-import RecentOrders from "../components/RecentOrders";
 import ManagementGrid from "../components/ManagementGrid";
 import SalesChart from "../components/SalesChart";
 import useGlobalHotkeys from "../hooks/useGlobalHotkeys";
-import {
-  VENDOR_REGISTER_PATH,
-  ORDERS_PATH,
-  INVENTORY_PATH,
-  SETTINGS_PATH,
-  ADD_PRODUCT_PATH,
-  ANALYTICS_PATH
-} from "../config";
+import { ADD_PRODUCT_PAGE_URL, SALES_ANALYTICS_PAGE_URL, ORDERS_PAGE_URL, PRODUCTS_PAGE_URL } from "../config";
 
 function Dashboard() {
   const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
@@ -75,20 +67,20 @@ function Dashboard() {
     (actionId: string) => {
       switch (actionId) {
         case "add_product":
-          window.location.href = ADD_PRODUCT_PATH;
+          window.location.href = ADD_PRODUCT_PAGE_URL;
           break;
         case "view_orders":
-          window.location.href = ORDERS_PATH;
+          window.open(ORDERS_PAGE_URL, "_self", "noopener");
           break;
         // Support both 'inventory' and 'view_inventory' ids (backend/front mock differences)
         case "view_inventory":
         case "inventory":
-          window.location.href = INVENTORY_PATH;
+          window.open(PRODUCTS_PAGE_URL, "_self", "noopener");
           break;
         // Support both 'analytics' and 'view_analytics'
         case "view_analytics":
         case "analytics":
-            window.location.href = ANALYTICS_PATH;
+            window.location.href = SALES_ANALYTICS_PAGE_URL;
             break;
         default:
           console.log("Quick action triggered:", actionId);
@@ -137,17 +129,17 @@ function Dashboard() {
     (actionId: string) => {
       switch (actionId) {
         case "catalog":
-          // route to inventory/catalog view
-          window.location.href = INVENTORY_PATH;
+          // route to products catalog view
+          window.open(PRODUCTS_PAGE_URL, "_self", "noopener");
           break;
         case "view_orders":
-          window.location.href = ORDERS_PATH;
+          window.open(ORDERS_PAGE_URL, "_self", "noopener");
           break;
         case "analytics":
-          window.location.href = ANALYTICS_PATH;
+          window.location.href = SALES_ANALYTICS_PAGE_URL;
           break;
         case "settings":
-          window.location.href = SETTINGS_PATH;
+          console.log("Settings action - not yet implemented");
           break;
         default:
           console.log("Management action:", actionId);
@@ -158,10 +150,9 @@ function Dashboard() {
 
   // (Key wiring completed above by merging maps)
 
-  // Register global hotkeys: r = refresh, n = go to vendor register, h/? = toggle hotkey helpers
+  // Register global hotkeys: r = refresh, h/? = toggle hotkey helpers
   useGlobalHotkeys({
     onRefresh: loadDashboardData,
-    onRegister: () => { window.location.href = VENDOR_REGISTER_PATH; },
     onHelp: () => {
       setShowHotkeys((s) => !s);
     },
@@ -193,7 +184,7 @@ function Dashboard() {
     return <ErrorScreen error={dashboardData.error} onRetry={loadDashboardData} />;
   }
 
-  const { store_info, stats, recent_orders, quick_actions } = dashboardData;
+  const { store_info, stats, quick_actions } = dashboardData;
   console.log('Dashboard Data:', dashboardData);
 
   return (
@@ -243,9 +234,7 @@ function Dashboard() {
       <DashboardHeader 
         storeInfo={store_info} 
         stats={stats} 
-        onRegister={() => { window.location.href = VENDOR_REGISTER_PATH; }}
         showHotkeys={showHotkeys}
-        registerHotkey={'n'}
       />
 
       <main className="dashboard-main">
@@ -256,12 +245,6 @@ function Dashboard() {
           <SalesChart data={dashboardData.sales_chart} currency={store_info.currency} />
         )}
 
-        {recent_orders.length > 0 && (
-          <RecentOrders 
-            orders={recent_orders} 
-            currency={store_info.currency} 
-          />
-        )}
 
         <ManagementGrid 
           stats={stats} 

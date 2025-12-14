@@ -1,5 +1,5 @@
 // Lightweight global hotkeys hook
-// Supports: r = refresh, n = navigate to register, h or ? = help
+// Supports: r = refresh, h or ? = help, plus custom quick action keys
 import { useEffect } from "react";
 
 export interface GlobalHotkeysOptions {

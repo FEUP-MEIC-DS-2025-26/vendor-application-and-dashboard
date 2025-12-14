@@ -1,5 +1,5 @@
 import { QuickAction } from "../types/dashboard";
-import { ADD_PRODUCT_PATH, ANALYTICS_PATH } from "../config";
+import { ADD_PRODUCT_PAGE_URL, SALES_ANALYTICS_PAGE_URL } from "../config";
 
 interface QuickActionsProps {
   actions: QuickAction[];
@@ -40,7 +40,7 @@ function QuickActions({ actions, hotkeys = {}, showHotkeys = false, onAction }: 
               <a
                 key={action.id}
                 className="action-card no-underline"
-                href={ADD_PRODUCT_PATH}
+                href={ADD_PRODUCT_PAGE_URL}
                 rel="noopener noreferrer"
                 style={{ textDecoration: "none" }}
               >
@@ -81,7 +81,7 @@ function QuickActions({ actions, hotkeys = {}, showHotkeys = false, onAction }: 
               <a
                 key={action.id}
                 className="action-card no-underline"
-                href={ANALYTICS_PATH}
+                href={SALES_ANALYTICS_PAGE_URL}
                 rel="noopener noreferrer"
                 style={{ textDecoration: "none" }}
               >

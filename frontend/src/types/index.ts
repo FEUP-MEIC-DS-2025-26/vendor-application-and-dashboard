@@ -1,6 +1,5 @@
 export type {
   DashboardData,
   DashboardStats,
-  QuickAction,
-  RecentOrder
+  QuickAction
 } from './dashboard';
