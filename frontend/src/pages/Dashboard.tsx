@@ -10,7 +10,7 @@ import QuickActions from "../components/QuickActions";
 import ManagementGrid from "../components/ManagementGrid";
 import SalesChart from "../components/SalesChart";
 import useGlobalHotkeys from "../hooks/useGlobalHotkeys";
-import { ADD_PRODUCT_PAGE_URL, SALES_ANALYTICS_PAGE_URL, ORDERS_PAGE_URL, PRODUCTS_PAGE_URL } from "../config";
+import { ADD_PRODUCT_PAGE_URL, LEADERBOARD_PAGE_URL, ORDERS_PAGE_URL, PRODUCTS_PAGE_URL, REVIEWS_PAGE_URL } from "../config";
 
 function Dashboard() {
   const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
@@ -77,11 +77,7 @@ function Dashboard() {
         case "inventory":
           window.open(PRODUCTS_PAGE_URL, "_self", "noopener");
           break;
-        // Support both 'analytics' and 'view_analytics'
-        case "view_analytics":
-        case "analytics":
-            window.location.href = SALES_ANALYTICS_PAGE_URL;
-            break;
+
         default:
           console.log("Quick action triggered:", actionId);
       }
@@ -99,10 +95,9 @@ function Dashboard() {
   const keyMap: Record<string, string> = {
     p: "add_product",
     o: "view_orders",
-    i: "inventory",
-    a: "analytics",
     c: "catalog",
-    s: "settings",
+    l: "leaderboard",
+    r: "reviews",
   };
 
   const quickActionHandlers: Record<string, () => void> = {};
@@ -135,11 +130,12 @@ function Dashboard() {
         case "view_orders":
           window.open(ORDERS_PAGE_URL, "_self", "noopener");
           break;
-        case "analytics":
-          window.location.href = SALES_ANALYTICS_PAGE_URL;
+
+        case "leaderboard":
+          window.open(LEADERBOARD_PAGE_URL, "_self", "noopener");
           break;
-        case "settings":
-          console.log("Settings action - not yet implemented");
+        case "reviews":
+          window.open(REVIEWS_PAGE_URL, "_self", "noopener");
           break;
         default:
           console.log("Management action:", actionId);

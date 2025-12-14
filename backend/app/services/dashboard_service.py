@@ -266,13 +266,6 @@ class DashboardService:
                 "description": "Monitor stock levels",
                 "icon": "📊",
                 "action": "view_inventory"
-            },
-            {
-                "id": "analytics",
-                "title": "Sales Analytics",
-                "description": "View performance metrics",
-                "icon": "📈",
-                "action": "view_analytics"
             }
         ]
 
